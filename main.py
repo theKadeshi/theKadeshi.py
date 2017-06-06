@@ -4,19 +4,19 @@ import hashlib
 import time
 import modules.cms as cms
 
-filesList = []
+files_list = []
 
 # Список расширений, которые будут сканироваться
-permittedExtensions = (".php", ".js", ".htm", ".html")
+permitted_extensions = (".php", ".js", ".htm", ".html")
 
 # База сигнатур
-signatureDatabase = ""
+signatures_database = ""
 
 # Список зараженных файлов
-anamnesisList = []
+anamnesis_list = []
 
 # Суммарный размер файлов в байтах
-totalFilesSize = 0
+total_files_size = 0
 
 
 def get_files_list():
@@ -25,16 +25,16 @@ def get_files_list():
 
 	:return: Ничего, просто заполняет список файлов
 	"""
-	global filesList
-	global totalFilesSize
+	global files_list
+	global total_files_size
 	
 	for root, dirs, files in os.walk('./'):
 		for name in files:
-			if name.endswith(permittedExtensions):
+			if name.endswith(permitted_extensions):
 				file_path = os.path.join(root, name)
 				file_size = os.path.getsize(file_path)
-				totalFilesSize = totalFilesSize + file_size
-				filesList.append({'path': file_path, 'size': file_size})
+				total_files_size = total_files_size + file_size
+				files_list.append({'path': file_path, 'size': file_size})
 	pass
 
 
@@ -43,9 +43,9 @@ def get_remote_signatures():
 	Функция получения удаленных сигнатур
 	:return: Нихрена
 	"""
-	global signatureDatabase
+	global signatures_database
 	r = requests.post('http://thekadeshi.com/api/getSignatures', data={'notoken': '1'})
-	signatureDatabase = r.json()
+	signatures_database = r.json()
 
 
 def scan_files():
@@ -54,9 +54,9 @@ def scan_files():
 
 	:return: Ничего
 	"""
-	global signatureDatabase
+	global signatures_database
 	
-	global totalFilesSize
+	global total_files_size
 	
 	# Флаг, нужно ли продолжать сканирование
 	need_to_scan = True
@@ -74,9 +74,9 @@ def scan_files():
 	scanner_counter = 0
 	
 	# Берем файл из списка
-	for file_item in filesList:
+	for file_item in files_list:
 		anamnesis_element = []
-		current_progress = (total_scanned + file_item['size']) * 100 / totalFilesSize
+		current_progress = (total_scanned + file_item['size']) * 100 / total_files_size
 		
 		is_file_clean = True
 		
@@ -98,7 +98,7 @@ def scan_files():
 				# Хеш сумма файла
 				file_hash = hashlib.sha224(str.encode(content)).hexdigest()
 				
-				for signature in signatureDatabase['h']:
+				for signature in signatures_database['h']:
 					if file_hash == signature['expression']:
 						
 						is_file_clean = False
@@ -118,7 +118,7 @@ def scan_files():
 				if need_to_scan == True:
 					
 					# Берем сигнатуру из списка
-					for signature in signatureDatabase['r']:
+					for signature in signatures_database['r']:
 						pass
 					# print(signature)
 		
@@ -140,16 +140,16 @@ def scan_files():
 	
 	# print(len(anamnesis_element))
 	if len(anamnesis_element) > 0:
-		anamnesisList.append(anamnesis_element)
+		anamnesis_list.append(anamnesis_element)
 
 
 print("Ready")
 get_files_list()
-print("Found", len(filesList), "files, ~", totalFilesSize, "bytes")
+print("Found", len(files_list), "files, ~", total_files_size, "bytes")
 cms.some_function()
 
 get_remote_signatures()
 
 scan_files()
 
-print(anamnesisList)
+print(anamnesis_list)
