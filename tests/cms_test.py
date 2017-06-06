@@ -1,6 +1,6 @@
 import unittest
 import os
-import modules.cms as cms
+import modules.cms as cms_module
 
 
 class TestCMSMethods(unittest.TestCase):
@@ -14,43 +14,33 @@ class TestCMSMethods(unittest.TestCase):
 		"""
 		Проверка определения вордпресса в правильном каталоге
 		"""
-		global wordpress_folder
-		directories_result = cms.get_directories_list(self.wordpress_folder)
-		files_result = cms.get_files_list(self.wordpress_folder)
+		# global wordpress_folder
+		cms = cms_module.CMS(self.wordpress_folder)
+		directories_result = cms.get_directories_list()
+		files_result = cms.get_files_list()
 		cms_result = cms.is_it_wordpress(files_result, directories_result)
 		value = cms_result['value']
 		version = cms_result['version']
-		self.assertEqual(value, 6, "Количество признаков не совпадает")
-		self.assertEqual(version, "4.7", "Версия не совпадает")
+		self.assertEqual(value, 4, "Количество признаков не совпадает")
+		self.assertEqual(version, "0", "Версия не совпадает")
 	
 	def test_get_directories_list(self):
 		"""
 		Проверка работоспособности функции получения списка каталогов
 		"""
-		global wordpress_folder
-		function_result = cms.get_directories_list(self.wordpress_folder)
+		# global wordpress_folder
+		cms = cms_module.CMS(self.wordpress_folder)
+		function_result = cms.get_directories_list()
 		self.assertEqual(len(function_result), 3, "Спсиок каталогов не соответствует ожиданиям")
 	
 	def test_get_files_list(self):
 		"""
 		Проверка работоспособности функции получения списка каталогов
 		"""
-		global wordpress_folder
-		function_result = cms.get_files_list(self.wordpress_folder)
+		# global wordpress_folder
+		cms = cms_module.CMS(self.wordpress_folder)
+		function_result = cms.get_files_list()
 		self.assertEqual(len(function_result), 16, "Спсиок файлов не соответствует ожиданиям")
-	
-	def test_get_file_content(self):
-		"""
-		Проверка чтения содержимого файла
-		"""
-		global wordpress_folder
-		function_result = cms.get_file_content(os.path.join(self.wordpress_folder, "index.php"))
-		self.assertNotEqual(len(function_result), 0, "Файл не открылся")
-		
-		# Проверка на FileNotFoundError
-		function_result = cms.get_file_content(os.path.join(self.wordpress_folder, "index2.php"))
-		self.assertEqual(function_result, None, "Открылся, а не должен был")
-
 
 # def test_isupper(self):
 #     self.assertTrue('FOO'.isupper())

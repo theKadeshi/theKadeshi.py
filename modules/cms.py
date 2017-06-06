@@ -1,71 +1,92 @@
-"""
-Модуль определения CMS
-"""
-import os, re
+import os
+import re
+import filesystem as fs
 
 
-def detect(path="./"):
-	""" Временная функция """
-	file_list = get_files_list(path)
-	dir_list = get_directories_list(path)
-	
-	is_wordpress = is_it_wordpress(file_list, dir_list)
-	return is_wordpress
-
-
-def is_it_wordpress(file_list, dir_list):
+class CMS:
 	"""
-	Функция определения, является ли папка каталогом Wordpress
-	
-	:param file_list: Список файлов в каталоге
-	:param dir_list: Список папок в каталоге
-	:return: int
+	Модуль определения CMS
 	"""
-	# Числовая вероятность того, что найденный сайт это вордпресс
-	value = 0.0
+	__path = "./"
 	
-	# Какие каталоги обычно присутствуют в корне вордпресса
-	wordpress_folder_structure = ("wp-admin", "wp-content", "wp-includes")
+	def __init__(self, path="./"):
+		""" Конструктор, судя по всему :) """
+		self.__path = path
 	
-	# Какие файлы обычно присутствуют в корне вордпресса
-	wordpress_files_structure = (
-		"index.php", "wp-settings.php", "wp-login.php",
-		"wp-blog-header.php", "wp-cron.php", "wp-links-opml.php",
-		"wp-mail.php", "wp-signup.php")
-	
-	# Файл с лицензией
-	wordpress_license_file = "license.txt"
-	
-	# Файл ридми, из которого можно узнать номер версии
-	wordpress_readme_file = "readme.html"
-	
-	# Предполагаемая версия вордпресса
-	wordpress_version = 0
-	result = False
-	
-	# Смотрим структуру каталогов и сравниваем ее со стандартной
-	for directory in dir_list:
-		# assert isinstance(wordpress_folder_structure, directory)
-		if directory['name'] in wordpress_folder_structure:
-			value = value + float(1 / len(wordpress_folder_structure))
-	
-	# Смотрим структуру файлов и сравниваем ее со стандартной
-	for files in file_list:
-		if files['name'] in wordpress_files_structure:
-			value = value + float(1 / len(wordpress_files_structure))
+	def detect(self):
+		""" Временная функция """
+		file_list = self.get_files_list()
+		dir_list = self.get_directories_list()
 		
-		# Смотрим, есть ли файл с лицензией. Обычно в ней пишется многое о CMS :)
-		if files['name'] == wordpress_license_file:
-			file_content = get_file_content(files['path'])
-			if file_content is not None:
-				if "https://wordpress.org/download/source/" in file_content:
-					value = value + 1
-				if "WordPress" in file_content:
-					value = value + 1
+		is_wordpress = self.is_it_wordpress(file_list, dir_list)
+		return is_wordpress
+	
+	def is_it_wordpress(self, file_list, dir_list):
+		"""
+		Функция определения, является ли папка каталогом Wordpress
 		
-		# Смотрим, есть ли файл с Readme. В нем можно взять номер версии
-		if files['name'] == wordpress_readme_file:
-			file_content = get_file_content(files['path'])
+		:param file_list: Список файлов в каталоге
+		:param dir_list: Список папок в каталоге
+		:return: int
+		"""
+		# Числовая вероятность того, что найденный сайт это вордпресс
+		value = 0.0
+		
+		# Какие каталоги обычно присутствуют в корне вордпресса
+		wordpress_folder_structure = ("wp-admin", "wp-content", "wp-includes")
+		
+		# Какие файлы обычно присутствуют в корне вордпресса
+		wordpress_files_structure = (
+			"index.php", "wp-settings.php", "wp-login.php",
+			"wp-blog-header.php", "wp-cron.php", "wp-links-opml.php",
+			"wp-mail.php", "wp-signup.php")
+		
+		# Файл с лицензией
+		wordpress_license_file = "license.txt"
+		
+		# Файл с версией вордпресса
+		wordpress_version_file = "wp-includes/version.php"
+		
+		# Предполагаемая версия вордпресса
+		wordpress_version = "0"
+		
+		result = False
+		
+		# Смотрим структуру каталогов и сравниваем ее со стандартной
+		for directory in dir_list:
+			# assert isinstance(wordpress_folder_structure, directory)
+			if directory['name'] in wordpress_folder_structure:
+				value = value + float(1 / len(wordpress_folder_structure))
+		
+		# Смотрим структуру файлов и сравниваем ее со стандартной
+		for files in file_list:
+			if files['name'] in wordpress_files_structure:
+				value = value + float(1 / len(wordpress_files_structure))
+			
+			# Смотрим, есть ли файл с лицензией. Обычно в ней пишется многое о CMS :)
+			if files['name'] == wordpress_license_file:
+				file_content = fs.get_file_content(files['path'])
+				if file_content is not None:
+					if "https://wordpress.org/download/source/" in file_content:
+						value = value + 1
+					if "WordPress" in file_content:
+						value = value + 1
+					
+					# # Смотрим, есть ли файл с Readme. В нем можно взять номер версии
+					# if files['name'] == wordpress_readme_file:
+					# 	file_content = get_file_content(files['path'])
+					# 	if file_content is not None:
+					# 		if "WordPress" in file_content:
+					# 			value = value + 1
+					# 		version_regex = r'^\s{0,}(<br\s{0,1}\/>)?\s{0,1}(Version)\s{0,1}(\d+\.\d+)$'
+					# 		version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
+					# 		if version_result is not None:
+					# 			value = value + 1
+					# 			wordpress_version = version_result.group(3)
+		
+		# Смотрим, есть ли файл с версией.
+		if files['name'] == wordpress_version_file:
+			file_content = fs.get_file_content(files['path'])
 			if file_content is not None:
 				if "WordPress" in file_content:
 					value = value + 1
@@ -74,43 +95,22 @@ def is_it_wordpress(file_list, dir_list):
 				if version_result is not None:
 					value = value + 1
 					wordpress_version = version_result.group(3)
-	return {'value': value, 'version': wordpress_version}
-
-
-def get_directories_list(path="./"):
-	""" Функция получения списка каталогов в заданном каталоге """
-	directory_list = []
-	for dirs in os.listdir(path):
-		dir_path = os.path.join(path, dirs)
-		if os.path.isdir(dir_path):
-			directory_list.append({'path': dir_path, 'name': dirs})
-	return directory_list
-
-
-def get_files_list(path="./"):
-	""" Функция получения списка файлов в каталоге """
-	files_list = []
-	for files in os.listdir(path):
-		file_path = os.path.join(path, files)
-		if os.path.isfile(file_path):
-			files_list.append({'path': file_path, 'name': files})
-	return files_list
-
-
-def get_file_content(file_path):
-	"""
-	Функция получения содержимого файла.
-	Ошибки замалчиваютя, потому что делать с ними пока нечего
+		return {'value': value, 'version': wordpress_version}
 	
-	:param file_path: Путь к файлу
-	:return: Содержимое файла или None
-	"""
-	file_content = None
-	try:
-		with open(file_path, encoding="latin-1") as f:
-			file_content = f.read()
-	except FileNotFoundError as e:
-		# print("FileNotFoundError", e)
-		pass
+	def get_directories_list(self):
+		""" Функция получения списка каталогов в заданном каталоге """
+		directory_list = []
+		for dirs in os.listdir(self.__path):
+			dir_path = os.path.join(self.__path, dirs)
+			if os.path.isdir(dir_path):
+				directory_list.append({'path': dir_path, 'name': dirs})
+		return directory_list
 	
-	return file_content
+	def get_files_list(self):
+		""" Функция получения списка файлов в каталоге """
+		files_list = []
+		for files in os.listdir(self.__path):
+			file_path = os.path.join(self.__path, files)
+			if os.path.isfile(file_path):
+				files_list.append({'path': file_path, 'name': files})
+		return files_list
