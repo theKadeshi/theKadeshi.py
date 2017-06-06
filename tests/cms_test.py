@@ -1,4 +1,5 @@
 import unittest
+import os
 import modules.cms as cms
 
 
@@ -37,6 +38,18 @@ class TestCMSMethods(unittest.TestCase):
 		global wordpress_folder
 		function_result = cms.get_files_list(self.wordpress_folder)
 		self.assertEqual(len(function_result), 16, "Спсиок файлов не соответствует ожиданиям")
+	
+	def test_get_file_content(self):
+		"""
+		Проверка чтения содержимого файла
+		"""
+		global wordpress_folder
+		function_result = cms.get_file_content(os.path.join(self.wordpress_folder, "index.php"))
+		self.assertNotEqual(len(function_result), 0, "Файл не открылся")
+		
+		# Проверка на FileNotFoundError
+		function_result = cms.get_file_content(os.path.join(self.wordpress_folder, "index2.php"))
+		self.assertEqual(function_result, None, "Открылся, а не должен был")
 
 
 # def test_isupper(self):

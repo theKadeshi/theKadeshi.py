@@ -3,6 +3,8 @@
 """
 import os, re
 
+import sys
+
 
 def detect(path="./"):
 	file_list = get_files_list(path)
@@ -55,36 +57,24 @@ def is_it_wordpress(file_list, dir_list):
 		
 		# Смотрим, есть ли файл с лицензией. Обычно в ней пишется многое о CMS :)
 		if files['name'] == wordpress_license_file:
-			with open(files['path'], encoding="utf-8") as f:
-				try:
-					# @!fixme! Надо отрефакторить!
-					file_content = f.read()
-					
-					if "https://wordpress.org/download/source/" in file_content:
-						value = value + 1
-					if "WordPress" in file_content:
-						value = value + 1
-				except UnicodeDecodeError as e:
-					# @todo:ntorgov Надо что-то сюда вставить для культуры
-					pass
+			file_content = get_file_content(files['path'])
+			if file_content is not None:
+				if "https://wordpress.org/download/source/" in file_content:
+					value = value + 1
+				if "WordPress" in file_content:
+					value = value + 1
+		
+		# Смотрим, есть ли файл с Readme. В нем можно взять номер версии
 		if files['name'] == wordpress_readme_file:
-			with open(files['path'], encoding="utf-8") as f:
-				try:
-					# @!fixme! Надо отрефакторить!
-					file_content = f.read()
-					
-					if "WordPress" in file_content:
-						value = value + 1
-					
-					version_regex = r'^\s{0,}(<br\s{0,1}\/>)?\s{0,1}(Version)\s{0,1}(\d+\.\d+)$'
-					version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
-					if version_result is not None:
-						value = value + 1
-						wordpress_version = version_result.group(3)
-				except UnicodeDecodeError as e:
-					# @todo:ntorgov Надо что-то сюда вставить для культуры
-					pass
-	
+			file_content = get_file_content(files['path'])
+			if file_content is not None:
+				if "WordPress" in file_content:
+					value = value + 1
+				version_regex = r'^\s{0,}(<br\s{0,1}\/>)?\s{0,1}(Version)\s{0,1}(\d+\.\d+)$'
+				version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
+				if version_result is not None:
+					value = value + 1
+					wordpress_version = version_result.group(3)
 	return {'value': value, 'version': wordpress_version}
 
 
@@ -106,3 +96,22 @@ def get_files_list(path="./"):
 		if os.path.isfile(file_path):
 			files_list.append({'path': file_path, 'name': files})
 	return files_list
+
+
+def get_file_content(file_path):
+	"""
+	Функция получения содержимого файла.
+	Ошибки замалчиваютя, потому что делать с ними пока нечего
+	
+	:param file_path: Путь к файлу
+	:return: Содержимое файла или None
+	"""
+	file_content = None
+	try:
+		with open(file_path, encoding="latin-1") as f:
+			file_content = f.read()
+	except FileNotFoundError as e:
+		# print("FileNotFoundError", e)
+		pass
+	
+	return file_content
