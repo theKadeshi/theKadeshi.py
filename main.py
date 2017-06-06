@@ -3,6 +3,7 @@ import json, requests
 import hashlib
 import time
 import modules.cms as cms
+import modules.database as dbase
 
 files_list = []
 
@@ -146,7 +147,6 @@ def scan_files():
 print("Ready")
 get_files_list()
 print("Found", len(files_list), "files, ~", total_files_size, "bytes")
-cms.some_function()
 
 get_remote_signatures()
 
