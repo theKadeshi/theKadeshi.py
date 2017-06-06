@@ -136,7 +136,7 @@ def scan_files():
 			if not is_file_clean:
 				file_message = "Infected"
 		
-		print('[%.2f%% | %skB/s] %s (%s)' % (current_progress, scan_speed, file_item['path'], file_message))
+		print('[{0:.2f}% | {1!s}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, file_item['path'], file_message))
 	
 	# print(len(anamnesis_element))
 	if len(anamnesis_element) > 0:
