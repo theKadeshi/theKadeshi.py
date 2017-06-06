@@ -3,10 +3,9 @@
 """
 import os, re
 
-import sys
-
 
 def detect(path="./"):
+	""" Временная функция """
 	file_list = get_files_list(path)
 	dir_list = get_directories_list(path)
 	
