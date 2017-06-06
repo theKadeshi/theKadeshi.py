@@ -21,8 +21,8 @@ class TestCMSMethods(unittest.TestCase):
 		cms_result = cms.is_it_wordpress(files_result, directories_result)
 		value = cms_result['value']
 		version = cms_result['version']
-		self.assertEqual(value, 4, "Количество признаков не совпадает")
-		self.assertEqual(version, "0", "Версия не совпадает")
+		self.assertEqual(value, 6, "Количество признаков не совпадает")
+		self.assertEqual(version, "4.7.5", "Версия не совпадает")
 	
 	def test_get_directories_list(self):
 		"""

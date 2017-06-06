@@ -71,30 +71,18 @@ class CMS:
 						value = value + 1
 					if "WordPress" in file_content:
 						value = value + 1
-					
-					# # Смотрим, есть ли файл с Readme. В нем можно взять номер версии
-					# if files['name'] == wordpress_readme_file:
-					# 	file_content = get_file_content(files['path'])
-					# 	if file_content is not None:
-					# 		if "WordPress" in file_content:
-					# 			value = value + 1
-					# 		version_regex = r'^\s{0,}(<br\s{0,1}\/>)?\s{0,1}(Version)\s{0,1}(\d+\.\d+)$'
-					# 		version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
-					# 		if version_result is not None:
-					# 			value = value + 1
-					# 			wordpress_version = version_result.group(3)
-		
+						
 		# Смотрим, есть ли файл с версией.
-		if files['name'] == wordpress_version_file:
-			file_content = fs.get_file_content(files['path'])
-			if file_content is not None:
-				if "WordPress" in file_content:
-					value = value + 1
-				version_regex = r'^\s{0,}(<br\s{0,1}\/>)?\s{0,1}(Version)\s{0,1}(\d+\.\d+)$'
-				version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
-				if version_result is not None:
-					value = value + 1
-					wordpress_version = version_result.group(3)
+		file_content = fs.get_file_content(os.path.join(self.__path, wordpress_version_file))
+		# print(file_content)
+		if file_content is not None:
+			if "WordPress" in file_content:
+				value = value + 1
+			version_regex = r"^\$wp_version\s{0,1}=\s{0,1}'(\d+.\d+(.\d+)?)';$"
+			version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
+			if version_result is not None:
+				value = value + 1
+				wordpress_version = version_result.group(1)
 		return {'value': value, 'version': wordpress_version}
 	
 	def get_directories_list(self):
