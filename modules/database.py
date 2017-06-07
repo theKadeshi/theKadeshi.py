@@ -2,21 +2,21 @@ import sqlite3
 import os
 from definitions import ROOT_DIR
 
-base_path = os.path.join(ROOT_DIR, "database/thekadeshi.db")
-print(base_path)
 
-
-def get_hash_signatures():
-    global base_path
+class Database:
+    base_path = os.path.join(ROOT_DIR, "database/thekadeshi.db")
     
-    conn = sqlite3.connect(base_path)
-    
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT title, hash, action FROM signatures_hash WHERE status = 1")
-    
-    results = cursor.fetchall()
-    
-    print(results)
-    
-    conn.close()
+    def get_hash_signatures(self):
+        signatures = []
+        conn = sqlite3.connect(self.base_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT title, hash, action FROM signatures_hash WHERE status = 1")
+        results = cursor.fetchall()
+        
+        # print(results)
+        
+        for result in results:
+            signatures.append({'title': result[0], 'expression': result[1], 'action': result[2]})
+        
+        conn.close()
+        return signatures
