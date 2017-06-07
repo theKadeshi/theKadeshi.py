@@ -42,6 +42,41 @@ class TestCMSMethods(unittest.TestCase):
 			self.assertLess(value, 1, "Количество признаков не совпадает")
 			self.assertNotEqual(version, "4.7.5", "Версия не совпадает")
 	
+	def test_is_it_joomla(self):
+		"""
+		Проверка определения ждумлы в правильном каталоге
+		"""
+		
+		cms_folder = "../mock/folder-02/joomla-3.7.2/"
+		if os.path.exists(cms_folder):
+			cms = cms_module.CMS(cms_folder)
+			directories_result = cms.get_directories_list()
+			files_result = cms.get_files_list()
+			cms_result = cms.is_it_joomla(files_result, directories_result)
+			value = cms_result['value']
+			version = cms_result['version']
+			# print(cms_result)
+			self.assertEqual(value, 6, "Количество признаков не совпадает")
+			self.assertEqual(version, "3.7.2", "Версия не совпадает")
+	
+	def test_is_it_joomla_false(self):
+		"""
+		Проверка определения джумлы в НЕ правильном каталоге
+		Система НЕ должна определить тут джумлу
+		"""
+		
+		cms_folder = "../mock/folder-02/wordpress-2.7/"
+		if os.path.exists(cms_folder):
+			cms = cms_module.CMS(cms_folder)
+			directories_result = cms.get_directories_list()
+			files_result = cms.get_files_list()
+			cms_result = cms.is_it_joomla(files_result, directories_result)
+			value = cms_result['value']
+			version = cms_result['version']
+			print(cms_result)
+			self.assertLess(value, 1, "Количество признаков не совпадает")
+			self.assertNotEqual(version, "4.7.5", "Версия не совпадает")
+			
 	def test_get_directories_list(self):
 		"""
 		Проверка работоспособности функции получения списка каталогов
@@ -89,7 +124,27 @@ class TestCMSMethods(unittest.TestCase):
 			# print(function_result)
 			self.assertEqual(function_result['cms'], 'wordpress', "CMS определена не правильно")
 			self.assertEqual(function_result['version'], '2.7', "Версия CMS определена не правильно")
-
-
+	
+	def test_detect_joomla_three(self):
+		""" Проверка определения вордпресса версии 3.7.2 """
+		
+		cms_folder = "../mock/folder-02/joomla-3.7.2/"
+		if os.path.exists(cms_folder):
+			cms = cms_module.CMS(cms_folder)
+			function_result = cms.detect()
+			# print(function_result)
+			self.assertEqual(function_result['cms'], 'joomla', "CMS определена не правильно")
+			self.assertEqual(function_result['version'], '3.7.2', "Версия CMS определена не правильно")
+	
+	def test_detect_joomla_two(self):
+		""" Проверка определения вордпресса версии 2.5.28 """
+		
+		cms_folder = "../mock/folder-02/joomla-2.5.8/"
+		if os.path.exists(cms_folder):
+			cms = cms_module.CMS(cms_folder)
+			function_result = cms.detect()
+			# print(function_result)
+			self.assertEqual(function_result['cms'], 'joomla', "CMS определена не правильно")
+			self.assertEqual(function_result['version'], '2.5.28', "Версия CMS определена не правильно")
 if __name__ == '__main__':
 	unittest.main()

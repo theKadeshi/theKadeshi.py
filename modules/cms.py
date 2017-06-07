@@ -19,11 +19,15 @@ class CMS:
 		dir_list = self.get_directories_list()
 		result = {'cms': 'unknown', 'version': '0'}
 		is_wordpress = self.is_it_wordpress(file_list, dir_list)
+		is_joomla = self.is_it_joomla(file_list, dir_list)
 		
 		# @todo нужно окультурить эту проверку
 		if is_wordpress['value'] > 3:
 			result = {'cms': 'wordpress', 'version': is_wordpress['version']}
-			
+		
+		if is_joomla['value'] > 3:
+			result = {'cms': 'joomla', 'version': is_joomla['version']}
+		
 		return result
 	
 	def is_it_wordpress(self, file_list, dir_list):
@@ -89,6 +93,58 @@ class CMS:
 				value = value + 1
 				wordpress_version = version_result.group(1)
 		return {'value': value, 'version': wordpress_version}
+	
+	def is_it_joomla(self, file_list, dir_list):
+		""" Функция определения является ли CMS джумлой, мать ее """
+		
+		# Числовая вероятность того, что найденный сайт это джумла
+		value = 0.0
+		
+		# Какие каталоги обычно присутствуют в корне джумлы
+		joomla_folder_structure = (
+		"administrator", "components", "includes", "language", "modules", "plugins", "cache", "cli", "libraries")
+		
+		# Какие файлы обычно присутствуют в корне джумлы
+		joomla_files_structure = ("index.php", "LICENSE.txt", "README.txt")
+		
+		# Файл, где можно попробовать найти версию джумлы
+		joomla_version_file = "administrator/manifests/files/joomla.xml"
+		
+		# Предположительная версия джумлы
+		joomla_version = "0"
+		
+		# Смотрим структуру каталогов и сравниваем ее со стандартной
+		for directory in dir_list:
+			# assert isinstance(wordpress_folder_structure, directory)
+			if directory['name'] in joomla_folder_structure:
+				value = value + float(1 / len(joomla_folder_structure))
+		
+		# Смотрим структуру файлов и сравниваем ее со стандартной
+		for files in file_list:
+			if files['name'] in joomla_files_structure:
+				value = value + float(1 / len(joomla_files_structure))
+			
+			# Смотрим, есть ли файл с лицензией. Обычно в ней пишется многое о CMS :)
+			if files['name'] == "index.php":
+				file_content = fs.get_file_content(files['path'])
+				if file_content is not None:
+					if "Joomla.Site" in file_content:
+						value = value + 1
+					if "define('_JEXEC', 1);" in file_content:
+						value = value + 1
+		
+		# Смотрим, есть ли файл с версией.
+		file_content = fs.get_file_content(os.path.join(self.__path, joomla_version_file))
+		# print(file_content)
+		if file_content is not None:
+			if "Joomla!" in file_content:
+				value = value + 1
+			version_regex = r"^\s{0,}<version>(\d+\.\d+(\.\d+)?)<\/version>$"
+			version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
+			if version_result is not None:
+				value = value + 1
+				joomla_version = version_result.group(1)
+		return {'value': value, 'version': joomla_version}
 	
 	def get_directories_list(self):
 		""" Функция получения списка каталогов в заданном каталоге """
