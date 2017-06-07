@@ -186,6 +186,8 @@ class TheKadeshi:
                 'result': '',
                 'result_message': ''
             }
+            
+            # Удаление зараженного файла
             if element['action'] == 'delete':
                 try:
                     os.remove(element['path'])
@@ -194,9 +196,10 @@ class TheKadeshi:
                     cure_result['result'] = 'false'
                     cure_result['result_message'] = e
             
+            # Лечение зараженного файла
             if element['action'] == 'cure':
                 cure_result['result'] = 'progress'
-            # print(cure_result)
+            
             rpt.append(cure_result)
         
         rpt.write_file()
