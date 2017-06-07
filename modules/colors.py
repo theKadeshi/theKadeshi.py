@@ -1,0 +1,8 @@
+C_DEFAULT = "\x1b[39m"
+C_RED = "\x1b[31m"
+C_GREEN = "\x1b[32m"
+C_YELLOW = "\x1b[33m"
+C_BLUE = "\x1b[34m"
+C_MAGENTA = "\x1b[35m"
+C_L_GREEN = "\x1b[92m"
+C_L_YELLOW = "\x1b[93m"

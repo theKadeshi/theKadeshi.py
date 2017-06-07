@@ -18,16 +18,18 @@ class Database:
         conn = sqlite3.connect(self.base_path)
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT title, hash, action, type FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
+            "SELECT title, hash, action, type, id FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
         results = cursor.fetchall()
         
         # print(results)
         
         for result in results:
-            signatures.append(
-                {'title': "KDSH." + result[3].upper() + "." + result[0],
-                 'expression': result[1],
-                 'action': result[2]})
+            signatures.append({
+                'id': result[4],
+                'title': "KDSH." + result[3].upper() + "." + result[0],
+                'expression': result[1],
+                'action': result[2]
+            })
         
         conn.close()
         return signatures
@@ -43,7 +45,7 @@ class Database:
         conn = sqlite3.connect(self.base_path)
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT title, expression, flags, action, type
+            SELECT title, expression, flags, action, type, id
             FROM signatures_regexp
             WHERE status = 1 ORDER BY popularity DESC""")
         results = cursor.fetchall()
@@ -57,6 +59,7 @@ class Database:
             if result[2] == 's':
                 flag = re.DOTALL | re.UNICODE
             signatures.append({
+                'id': result[5],
                 'title': "KDSH." + result[4].upper() + "." + result[0],
                 'expression': re.compile(result[1], flag),
                 'flag': result[2],

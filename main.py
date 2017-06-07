@@ -1,22 +1,24 @@
 import os
-import json, requests
+# import json, requests
 import hashlib
 import time
 import re
-import modules.cms as cms
+# import modules.cms as cms
 import modules.database as dbase
+import modules.report as report
+import modules.colors as cls
 
 # Список расширений, которые будут сканироваться
 permitted_extensions = (".php", ".js", ".htm", ".html", "pl")
-
-# Список зараженных файлов
-anamnesis_list = []
 
 
 class TheKadeshi:
     """
     Основной класс
     """
+    
+    # Список зараженных файлов
+    anamnesis_list = []
     
     # Список файлов для сканирования
     files_list = []
@@ -109,6 +111,8 @@ class TheKadeshi:
                             is_file_clean = False
                             
                             anamnesis_element = {
+                                'id': signature['id'],
+                                'type': 'h',
                                 'path': file_item['path'],
                                 'title': signature['title'],
                                 'action': signature['action']
@@ -137,6 +141,8 @@ class TheKadeshi:
                                 end_position = matches.span()[1]
                                 
                                 anamnesis_element = {
+                                    'id': signature['id'],
+                                    'type': 'r',
                                     'path': file_item['path'],
                                     'title': signature['title'],
                                     'action': signature['action'],
@@ -144,6 +150,7 @@ class TheKadeshi:
                                 }
                                 # Прерываем цикл
                                 break
+                f.close()
             
             total_scanned = total_scanned + file_item['size']
             current_time = time.time()
@@ -152,20 +159,48 @@ class TheKadeshi:
                 scan_speed = total_scanned // time_delta // 1024
             scanner_counter = scanner_counter + 1
             
-            file_message = "\x1b[92m" + "Clean" + "\x1b[39m"
+            file_message = cls.C_GREEN + "Clean" + cls.C_DEFAULT
             if is_file_error:
                 file_message = "Error"
             else:
                 if not is_file_clean:
-                    file_message = "\x1b[31m" + "Infected" + "\x1b[39m" + ": " + "\x1b[93m" + anamnesis_element[
-                        'title'] + "\x1b[39m"
+                    file_message = cls.C_RED + "Infected" + cls.C_DEFAULT + ": " + cls.C_L_YELLOW + anamnesis_element[
+                        'title'] + cls.C_DEFAULT
             
             print('[{0:.2f}% | {1!s}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, file_item['path'],
                                                                 file_message, sep=" ", end="", flush=True))
             
             # print(len(anamnesis_element))
             if len(anamnesis_element) > 0:
-                anamnesis_list.append(anamnesis_element)
+                self.anamnesis_list.append(anamnesis_element)
+    
+    def cure(self):
+        
+        rpt = report.Report()
+        
+        for element in self.anamnesis_list:
+            cure_result = {
+                'path': element['path'],
+                'action': element['action'],
+                'title': element['title'],
+                'result': '',
+                'result_message': ''
+            }
+            if element['action'] == 'delete':
+                try:
+                    os.remove(element['path'])
+                    cure_result['result'] = 'ok'
+                except PermissionError as e:
+                    cure_result['result'] = 'false'
+                    cure_result['result_message'] = e
+            
+            if element['action'] == 'cure':
+                cure_result['result'] = 'progress'
+            # print(cure_result)
+            rpt.append(cure_result)
+        
+        rpt.write_file()
+        rpt.output()
 
 
 print("Ready")
@@ -177,5 +212,4 @@ kdsh.load_signatures()
 
 kdsh.scan_files()
 
-for element in anamnesis_list:
-    print(element)
+kdsh.cure()
