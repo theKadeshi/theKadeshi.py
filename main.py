@@ -7,6 +7,7 @@ import re
 import modules.database as dbase
 import modules.report as report
 import modules.colors as cls
+import modules.filesystem as fsys
 
 # Список расширений, которые будут сканироваться
 permitted_extensions = (".php", ".js", ".htm", ".html", "pl")
@@ -124,7 +125,6 @@ class TheKadeshi:
                             # Прерываем цикл
                             break
                     
-                    # todo тут будет сканирование по регуляркам
                     # Если сканирование по хэщ ничего не выявило, то ищем по сигнатурам
                     if need_to_scan:
                         try:
@@ -177,6 +177,7 @@ class TheKadeshi:
     def cure(self):
         
         rpt = report.Report()
+        fs = fsys.FileSystem()
         
         for element in self.anamnesis_list:
             cure_result = {
@@ -198,7 +199,15 @@ class TheKadeshi:
             
             # Лечение зараженного файла
             if element['action'] == 'cure':
-                cure_result['result'] = 'progress'
+                file_content = fs.get_file_content(element['path'])
+                cure_result['result'] = 'cure'
+                first_part = file_content[:element['cure']['start']]
+                second_part = file_content[element['cure']['end']:]
+                
+                result = fs.put_file_content(element['path'], first_part + second_part)
+                cure_result['result'] = 'false'
+                if result:
+                    cure_result['result'] = 'ok'
             
             rpt.append(cure_result)
         
