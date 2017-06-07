@@ -2,6 +2,7 @@ import os
 import json, requests
 import hashlib
 import time
+import re
 import modules.cms as cms
 import modules.database as dbase
 
@@ -48,6 +49,7 @@ class TheKadeshi:
         """
         db = dbase.Database()
         self.signatures_database['h'] = db.get_hash_signatures()
+        self.signatures_database['r'] = db.get_regexp_signatures()
     
     def scan_files(self):
         """
@@ -59,9 +61,6 @@ class TheKadeshi:
         global signatures_database
         
         global total_files_size
-        
-        # Флаг, нужно ли продолжать сканирование
-        need_to_scan = True
         
         # Таймер
         timer_start = time.time()
@@ -83,6 +82,9 @@ class TheKadeshi:
             is_file_clean = True
             
             is_file_error = False
+            
+            # Флаг, нужно ли продолжать сканирование
+            need_to_scan = True
             
             # with open(file_item['path'], encoding="latin-1", mode='rb') as f:
             with open(file_item['path'], mode='rb') as f:
@@ -114,16 +116,34 @@ class TheKadeshi:
                             
                             if signature['action'] == 'delete':
                                 need_to_scan = False
+                            
+                            # Прерываем цикл
+                            break
+                    
+                    # todo тут будет сканирование по регуляркам
+                    # Если сканирование по хэщ ничего не выявило, то ищем по сигнатурам
+                    if need_to_scan:
+                        try:
+                            string_content = content.decode('utf-8')
+                        except UnicodeDecodeError as e:
+                            string_content = content.decode('latin-1')
+                        
+                        for signature in self.signatures_database['r']:
+                            matches = re.search(signature['expression'], string_content)
+                            if matches is not None:
+                                need_to_scan = False
+                                is_file_clean = False
+                                start_position = matches.span()[0]
+                                end_position = matches.span()[1]
                                 
-                                # print(file_hash)
-                                # todo тут будет сканирование по регуляркам
-                                # Если сканирование по хэщ ничего не выявило, то ищем по сигнатурам
-                                # if need_to_scan == True:
-                                
-                                # Берем сигнатуру из списка
-                                # for signature in signatures_database['r']:
-                                # pass
-                                # print(signature)
+                                anamnesis_element = {
+                                    'path': file_item['path'],
+                                    'title': signature['title'],
+                                    'action': signature['action'],
+                                    'cure': {'start': start_position, 'end': end_position}
+                                }
+                                # Прерываем цикл
+                                break
             
             total_scanned = total_scanned + file_item['size']
             current_time = time.time()
