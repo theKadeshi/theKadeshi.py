@@ -17,9 +17,14 @@ class CMS:
 		""" Временная функция """
 		file_list = self.get_files_list()
 		dir_list = self.get_directories_list()
-		
+		result = {'cms': 'unknown', 'version': '0'}
 		is_wordpress = self.is_it_wordpress(file_list, dir_list)
-		return is_wordpress
+		
+		# @todo нужно окультурить эту проверку
+		if is_wordpress['value'] > 3:
+			result = {'cms': 'wordpress', 'version': is_wordpress['version']}
+			
+		return result
 	
 	def is_it_wordpress(self, file_list, dir_list):
 		"""
@@ -71,7 +76,7 @@ class CMS:
 						value = value + 1
 					if "WordPress" in file_content:
 						value = value + 1
-						
+		
 		# Смотрим, есть ли файл с версией.
 		file_content = fs.get_file_content(os.path.join(self.__path, wordpress_version_file))
 		# print(file_content)

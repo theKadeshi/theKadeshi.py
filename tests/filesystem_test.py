@@ -8,13 +8,13 @@ class TestFilesystemsMethods(unittest.TestCase):
 	Тесты для модуля файловой системы
 	"""
 	
-	wordpress_folder = "../mock/folder-02/wordpress/"
+	wordpress_folder = "../mock/folder-02/wordpress-4.7.5/"
 	
 	def test_get_file_content(self):
 		"""
 		Проверка чтения содержимого файла
 		"""
-		global wordpress_folder
+		
 		function_result = fs.get_file_content(os.path.join(self.wordpress_folder, "index.php"))
 		self.assertNotEqual(len(function_result), 0, "Файл не открылся")
 		
