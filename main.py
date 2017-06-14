@@ -99,7 +99,7 @@ class TheKadeshi:
                 # Это если в коде внезапно нашелся недопустимый символ.
                 except UnicodeDecodeError as e:
                     is_file_error = True
-                    print("Incorrect char in ", file_item['path'], e)
+                    # print("Incorrect char in ", file_item['path'], e)
                 
                 # Если нет ошибок чтения, то сканируем
                 if len(content) > 0:

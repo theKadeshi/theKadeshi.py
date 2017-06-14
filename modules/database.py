@@ -54,6 +54,8 @@ class Database:
         
         for result in results:
             flag = re.IGNORECASE
+            if result[2] == 'im':
+                flag = re.IGNORECASE | re.MULTILINE
             if result[2] == 'is':
                 flag = re.IGNORECASE | re.DOTALL
             if result[2] == 's':
