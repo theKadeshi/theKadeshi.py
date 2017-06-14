@@ -99,13 +99,13 @@ class TheKadeshi:
                 # Это если в коде внезапно нашелся недопустимый символ.
                 except UnicodeDecodeError as e:
                     is_file_error = True
-                    # print("Incorrect char in ", file_item['path'], e)
+                    print("Incorrect char in ", file_item['path'], e)
                 
                 # Если нет ошибок чтения, то сканируем
                 if len(content) > 0:
                     # Хеш сумма файла
                     file_hash = hashlib.sha256(content).hexdigest()
-                    print(file_hash, file_item['path'])
+                    # print(file_hash, file_item['path'])
                     
                     for signature in self.signatures_database['h']:
                         if file_hash == signature['expression']:
