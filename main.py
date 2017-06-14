@@ -105,6 +105,7 @@ class TheKadeshi:
                 if len(content) > 0:
                     # Хеш сумма файла
                     file_hash = hashlib.sha256(content).hexdigest()
+                    print(file_hash, file_item['path'])
                     
                     for signature in self.signatures_database['h']:
                         if file_hash == signature['expression']:

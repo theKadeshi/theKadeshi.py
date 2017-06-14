@@ -8,6 +8,13 @@ indent_size = 3
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.php]
+charset = utf-8
+indent_style = tab
+indent_size = 3
+insert_final_newline = false
+trim_trailing_whitespace = false
+
 [*.py]
 charset = utf-8
 indent_style = space
