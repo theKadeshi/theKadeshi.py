@@ -8,6 +8,7 @@ indent_size = 3
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# Local rule
 [*.php]
 charset = utf-8
 indent_style = tab
