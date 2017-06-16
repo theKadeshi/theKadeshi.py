@@ -78,7 +78,7 @@ class Database:
         # conn.close()
         return signatures
     
-    def __exit__(self):
+    def __exit__(self, exception_type, exception_value, traceback):
         """
         Destructor
         
