@@ -14,10 +14,10 @@ class TestFilesystemsMethods(unittest.TestCase):
         """
         Проверка чтения содержимого файла
         """
-        
-        function_result = fs.get_file_content(os.path.join(self.wordpress_folder, "index.php"))
-        self.assertNotEqual(len(function_result), 0, "Файл не открылся")
-        
-        # Проверка на FileNotFoundError
-        function_result = fs.get_file_content(os.path.join(self.wordpress_folder, "index2.php"))
-        self.assertEqual(function_result, None, "Открылся, а не должен был")
+        if os.path.exists(self.wordpress_folder):
+            function_result = fs.get_file_content(os.path.join(self.wordpress_folder, "index.php"))
+            self.assertNotEqual(len(function_result), 0, "Файл не открылся")
+            
+            # Проверка на FileNotFoundError
+            function_result = fs.get_file_content(os.path.join(self.wordpress_folder, "index2.php"))
+            self.assertEqual(function_result, None, "Открылся, а не должен был")

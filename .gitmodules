@@ -1,0 +1,3 @@
+[submodule "mock/rockock"]
+	path = mock/rockock
+	url = https://github.com/ntorgov/thekadeshi.infected

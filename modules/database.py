@@ -7,6 +7,14 @@ from definitions import ROOT_DIR
 class Database:
     base_path = os.path.join(ROOT_DIR, "database/thekadeshi.db")
     
+    conn = None
+    
+    def __init__(self):
+        """
+        Constructor
+        """
+        self.conn = sqlite3.connect(self.base_path)
+    
     def get_hash_signatures(self):
         """
         Функция получения hash сигнатур из базы
@@ -15,8 +23,8 @@ class Database:
         """
         
         signatures = []
-        conn = sqlite3.connect(self.base_path)
-        cursor = conn.cursor()
+        # conn = sqlite3.connect(self.base_path)
+        cursor = self.conn.cursor()
         cursor.execute(
             "SELECT title, hash, action, type, id FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
         results = cursor.fetchall()
@@ -31,7 +39,6 @@ class Database:
                 'action': result[2]
             })
         
-        conn.close()
         return signatures
     
     def get_regexp_signatures(self):
@@ -42,8 +49,8 @@ class Database:
         """
         
         signatures = []
-        conn = sqlite3.connect(self.base_path)
-        cursor = conn.cursor()
+        # conn = sqlite3.connect(self.base_path)
+        cursor = self.conn.cursor()
         cursor.execute("""
             SELECT title, expression, flags, action, type, id
             FROM signatures_regexp
@@ -54,6 +61,8 @@ class Database:
         
         for result in results:
             flag = re.IGNORECASE
+            if result[2] == 'im':
+                flag = re.IGNORECASE | re.MULTILINE
             if result[2] == 'is':
                 flag = re.IGNORECASE | re.DOTALL
             if result[2] == 's':
@@ -66,5 +75,13 @@ class Database:
                 'action': result[3]
             })
         
-        conn.close()
+        # conn.close()
         return signatures
+    
+    def __exit__(self, exception_type, exception_value, traceback):
+        """
+        Destructor
+        
+        :return:
+        """
+        self.conn.close()
