@@ -248,7 +248,7 @@ if __name__ == "__main__":
         action='store_true',
         help="Disable color output"
     )
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s 2.0')
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
 
 args = parser.parse_args()
 
