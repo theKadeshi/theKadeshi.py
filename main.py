@@ -22,20 +22,14 @@ class TheKadeshi:
     Основной класс
     """
     
-    # Путь к корню сайта
-    site_folder = "./"
-    
-    # Использовать ли цвет в выводе
-    no_color = False
-    
     # Список зараженных файлов
-    anamnesis_list = []
+    anamnesis_list: list = []
     
     # Список файлов для сканирования
-    files_list = []
+    files_list: list = []
     
     # Суммарный размер файлов в байтах
-    total_files_size = 0
+    total_files_size: int = 0
     
     # База сигнатур
     signatures_database = {'h': [], 'r': []}
@@ -49,9 +43,9 @@ class TheKadeshi:
         :type arguments: object{}
         """
         
-        self.site_folder = arguments.site
-        self.no_color = arguments.no_color
-        self.no_heuristic = arguments.no_heuristic
+        self.site_folder: str = arguments.site
+        self.no_color: bool = arguments.no_color
+        self.no_heuristic: bool = arguments.no_heuristic
     
     def get_files_list(self):
         """
@@ -63,8 +57,8 @@ class TheKadeshi:
         for root, dirs, files in os.walk(self.site_folder):
             for name in files:
                 if name.endswith(permitted_extensions):
-                    file_path = os.path.join(root, name)
-                    file_size = os.path.getsize(file_path)
+                    file_path: str = os.path.join(root, name)
+                    file_size: int = os.path.getsize(file_path)
                     self.total_files_size = self.total_files_size + file_size
                     self.files_list.append({'path': file_path, 'size': file_size})
     
@@ -72,6 +66,7 @@ class TheKadeshi:
         """
         Функция загрузки сигнатур
         """
+        
         db = dbase.Database()
         self.signatures_database['h'] = db.get_hash_signatures()
         self.signatures_database['r'] = db.get_regexp_signatures()
@@ -84,29 +79,29 @@ class TheKadeshi:
         """
         
         # Таймер
-        timer_start = time.time()
+        timer_start: float = time.time()
         
         # Сколько просканировано в байтах, необходимо для вычисления скорости
-        total_scanned = 0
+        total_scanned: int = 0
         
         # Расчетная скорость сканирования
-        scan_speed = 0
+        scan_speed: float = 0
         
         # Счетчик проверенных файлов
-        scanner_counter = 0
+        scanner_counter: int = 0
         
         heuristic = h_mod.Heuristic()
         # Берем файл из списка
         for file_item in self.files_list:
-            anamnesis_element = []
+            anamnesis_element: list = []
             current_progress = (total_scanned + file_item['size']) * 100 / self.total_files_size
             
-            is_file_clean = True
+            is_file_clean: bool = True
             
-            is_file_error = False
+            is_file_error: bool = False
             
             # Флаг, нужно ли продолжать сканирование
-            need_to_scan = True
+            need_to_scan: bool = True
             
             # with open(file_item['path'], encoding="latin-1", mode='rb') as f:
             with open(file_item['path'], mode='rb') as f:
@@ -123,7 +118,7 @@ class TheKadeshi:
                 # Если нет ошибок чтения, то сканируем
                 if len(content) > 0:
                     # Хеш сумма файла
-                    file_hash = hashlib.sha256(content).hexdigest()
+                    file_hash: str = hashlib.sha256(content).hexdigest()
                     # print(file_hash, file_item['path'])
                     
                     for signature in self.signatures_database['h']:
@@ -184,7 +179,7 @@ class TheKadeshi:
                 scan_speed = total_scanned // time_delta // 1024
             scanner_counter = scanner_counter + 1
             
-            file_message = cls.C_GREEN + "Clean" + cls.C_DEFAULT
+            file_message: str = cls.C_GREEN + "Clean" + cls.C_DEFAULT
             if self.no_color:
                 file_message = "Clean"
             
@@ -206,6 +201,11 @@ class TheKadeshi:
                 self.anamnesis_list.append(anamnesis_element)
     
     def cure(self):
+        """
+        Healing function
+        
+        :return: Void
+        """
         
         rpt = report.Report()
         fs = fsys.FileSystem()
@@ -232,8 +232,8 @@ class TheKadeshi:
             if element['action'] == 'cure':
                 file_content = fs.get_file_content(element['path'])
                 cure_result['result'] = 'cure'
-                first_part = file_content[:element['cure']['start']]
-                second_part = file_content[element['cure']['end']:]
+                first_part: bytes = file_content[:element['cure']['start']]
+                second_part: bytes = file_content[element['cure']['end']:]
                 
                 result = fs.put_file_content(element['path'], first_part + second_part)
                 cure_result['result'] = 'false'

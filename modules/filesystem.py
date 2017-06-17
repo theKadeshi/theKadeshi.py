@@ -27,17 +27,18 @@ class FileSystem:
         return file_content
     
     @staticmethod
-    def put_file_content(file_path: str, file_content: bytearray):
+    def put_file_content(file_path: str, file_content: bytes):
         """
         Write content into file
         
         :param file_path: File path
         :type file_path: str
         :param file_content: File content
-        :type file_content: bytearray
+        :type file_content: bytes
         :return:
         """
-        result = True
+        
+        result: bool = True
         try:
             with open(file_path, mode="wb") as f:
                 f.write(file_content)

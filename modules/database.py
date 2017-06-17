@@ -9,7 +9,7 @@ class Database:
     Database class
     """
     
-    base_path = os.path.join(ROOT_DIR, "database/thekadeshi.db")
+    base_path: str = os.path.join(ROOT_DIR, "database/thekadeshi.db")
     
     conn = None
     
@@ -17,6 +17,7 @@ class Database:
         """
         Constructor
         """
+        
         self.conn = sqlite3.connect(self.base_path)
     
     def get_hash_signatures(self):
@@ -24,9 +25,10 @@ class Database:
         Функция получения hash сигнатур из базы
         
         :return: Список сигнатур
+        :rtype: list
         """
         
-        signatures = []
+        signatures: list = []
         # conn = sqlite3.connect(self.base_path)
         cursor = self.conn.cursor()
         cursor.execute(
@@ -50,9 +52,10 @@ class Database:
         Функция получения списка регулярных сигнатур из базы
         
         :return: Список сигнатур
+        :rtype: list
         """
         
-        signatures = []
+        signatures: list = []
         # conn = sqlite3.connect(self.base_path)
         cursor = self.conn.cursor()
         cursor.execute("""
@@ -88,4 +91,5 @@ class Database:
         
         :return:
         """
+        
         self.conn.close()

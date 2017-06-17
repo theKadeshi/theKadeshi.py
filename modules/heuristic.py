@@ -6,16 +6,16 @@ class Heuristic:
     Эвристическая проверка
     """
     
-    consonants = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "x", "v", "w", "z"]
+    consonants: list = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "x", "v", "w", "z"]
     
-    forbidden_functions = ["eval", "assert", "base64_decode", "str_rot13", "mail",
-                           "move_uploaded_file", "is_uploaded_file", "script",
-                           "fopen", "curl_init", "document.write", "$GLOBAL",
-                           "passthru", "system", "exec", "header", "preg_replace",
-                           "fromCharCode", "$_COOKIE", "$_POST", "$_GET", "copy", "navigator",
-                           "$_REQUEST", "array_filter", "str_replace"]
+    forbidden_functions: list = ["eval", "assert", "base64_decode", "str_rot13", "mail",
+                                 "move_uploaded_file", "is_uploaded_file", "script",
+                                 "fopen", "curl_init", "document.write", "$GLOBAL",
+                                 "passthru", "system", "exec", "header", "preg_replace",
+                                 "fromCharCode", "$_COOKIE", "$_POST", "$_GET", "copy", "navigator",
+                                 "$_REQUEST", "array_filter", "str_replace"]
     
-    def sigmoid(self, x):
+    def sigmoid(self, x: float):
         """
         Modified sigmoid function
         
@@ -36,9 +36,9 @@ class Heuristic:
         :rtype: float
         """
         
-        warning_level = 0
-        consonant_counter = 0
-        temporary_warning_level = 0
+        warning_level: float = 0
+        consonant_counter: int = 0
+        temporary_warning_level: int = 0
         for letter in file_name:
             if letter in self.consonants:
                 consonant_counter += 1
@@ -63,11 +63,11 @@ class Heuristic:
         :rtype: bool
         """
         
-        result = False
+        result: bool = False
         
         for func in self.forbidden_functions:
             if file_content.find(func) != -1:
                 result = True
                 break
-                
+        
         return result
