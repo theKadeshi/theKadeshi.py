@@ -5,6 +5,10 @@ from definitions import ROOT_DIR
 
 
 class Database:
+    """
+    Database class
+    """
+    
     base_path = os.path.join(ROOT_DIR, "database/thekadeshi.db")
     
     conn = None

@@ -1,5 +1,10 @@
 class FileSystem:
-    def get_file_content(self, file_path: str):
+    """
+    Filesystem class
+    """
+    
+    @staticmethod
+    def get_file_content(file_path: str):
         """
         Функция получения содержимого файла.
         Ошибки замалчиваютя, потому что делать с ними пока нечего
@@ -21,7 +26,17 @@ class FileSystem:
         
         return file_content
     
-    def put_file_content(self, file_path: str, file_content: bytearray):
+    @staticmethod
+    def put_file_content(file_path: str, file_content: bytearray):
+        """
+        Write content into file
+        
+        :param file_path: File path
+        :type file_path: str
+        :param file_content: File content
+        :type file_content: bytearray
+        :return:
+        """
         result = True
         try:
             with open(file_path, mode="wb") as f:

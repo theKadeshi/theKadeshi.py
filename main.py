@@ -83,10 +83,6 @@ class TheKadeshi:
         :return: Ничего
         """
         
-        global signatures_database
-        
-        global total_files_size
-        
         # Таймер
         timer_start = time.time()
         

@@ -4,6 +4,10 @@ import modules.colors as cls
 
 
 class Report:
+    """
+    Report class
+    """
+    
     report_list = []
     
     def append(self, element):
