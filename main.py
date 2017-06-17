@@ -11,6 +11,7 @@ import modules.database as dbase
 import modules.report as report
 import modules.colors as cls
 import modules.filesystem as fsys
+import modules.heuristic as h_mod
 
 # Список расширений, которые будут сканироваться
 permitted_extensions = (".php", ".js", ".htm", ".html", "pl")
@@ -39,9 +40,18 @@ class TheKadeshi:
     # База сигнатур
     signatures_database = {'h': [], 'r': []}
     
-    def __init__(self, site_path="./", no_color=False):
-        self.site_folder = site_path
-        self.no_color = no_color
+    # site_path: str = "./", no_color: bool = False, no_heuristic: bool = False
+    def __init__(self, arguments):
+        """
+        Scanner initialization
+        
+        :param arguments: Scanner arguments
+        :type arguments: object{}
+        """
+        
+        self.site_folder = arguments.site
+        self.no_color = arguments.no_color
+        self.no_heuristic = arguments.no_heuristic
     
     def get_files_list(self):
         """
@@ -89,6 +99,7 @@ class TheKadeshi:
         # Счетчик проверенных файлов
         scanner_counter = 0
         
+        heuristic = h_mod.Heuristic()
         # Берем файл из списка
         for file_item in self.files_list:
             anamnesis_element = []
@@ -138,6 +149,11 @@ class TheKadeshi:
                             # Прерываем цикл
                             break
                     
+                    # Heuristic mode is On
+                    if not self.no_heuristic:
+                        if not heuristic.validate_forbidden_functions(str(content)):
+                            need_to_scan = False
+                    
                     # Если сканирование по хэщ ничего не выявило, то ищем по сигнатурам
                     if need_to_scan:
                         try:
@@ -171,11 +187,11 @@ class TheKadeshi:
             if time_delta != 0:
                 scan_speed = total_scanned // time_delta // 1024
             scanner_counter = scanner_counter + 1
-
+            
             file_message = cls.C_GREEN + "Clean" + cls.C_DEFAULT
             if self.no_color:
                 file_message = "Clean"
-                
+            
             if is_file_error:
                 file_message = "Error"
             else:
@@ -241,6 +257,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "site",
         default="./",
+        nargs="?",
         help="Site folder"
     )
     parser.add_argument(
@@ -248,16 +265,21 @@ if __name__ == "__main__":
         action='store_true',
         help="Disable color output"
     )
+    parser.add_argument(
+        "-nh", "--no-heuristic",
+        action="store_true",
+        help="Disable heuristic detection. Check all files"
+    )
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.0.1')
-
-args = parser.parse_args()
-
-kdsh = TheKadeshi(args.site, args.no_color)
-kdsh.get_files_list()
-print("Found", len(kdsh.files_list), "files, ~", kdsh.total_files_size, "bytes")
-
-kdsh.load_signatures()
-
-kdsh.scan_files()
-
-kdsh.cure()
+    
+    args = parser.parse_args()
+    
+    kdsh = TheKadeshi(args)
+    kdsh.get_files_list()
+    print("Found", len(kdsh.files_list), "files, ~", kdsh.total_files_size, "bytes")
+    
+    kdsh.load_signatures()
+    
+    kdsh.scan_files()
+    
+    kdsh.cure()
