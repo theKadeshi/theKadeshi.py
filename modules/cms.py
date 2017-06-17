@@ -1,6 +1,6 @@
 import os
 import re
-import filesystem as fs
+import filesystem as fs_mod
 
 
 class CMS:
@@ -74,7 +74,7 @@ class CMS:
             
             # Смотрим, есть ли файл с лицензией. Обычно в ней пишется многое о CMS :)
             if files['name'] == wordpress_license_file:
-                file_content = fs.get_file_content(files['path'])
+                file_content = fs_mod.FileSystem.get_file_content(files['path'])
                 if file_content is not None:
                     if "https://wordpress.org/download/source/" in file_content:
                         value = value + 1
@@ -82,13 +82,13 @@ class CMS:
                         value = value + 1
         
         # Смотрим, есть ли файл с версией.
-        file_content = fs.get_file_content(os.path.join(self.__path, wordpress_version_file))
+        file_content = fs_mod.FileSystem.get_file_content(os.path.join(self.__path, wordpress_version_file))
         # print(file_content)
         if file_content is not None:
             if "WordPress" in file_content:
                 value = value + 1
             version_regex = r"^\$wp_version\s{0,1}=\s{0,1}'(\d+.\d+(.\d+)?)';$"
-            version_result = re.search(version_regex, file_content, re.MULTILINE | re.UNICODE | re.IGNORECASE)
+            version_result = re.search(version_regex, str(file_content), re.MULTILINE | re.UNICODE | re.IGNORECASE)
             if version_result is not None:
                 value = value + 1
                 wordpress_version = version_result.group(1)
@@ -126,7 +126,7 @@ class CMS:
             
             # Смотрим, есть ли файл с лицензией. Обычно в ней пишется многое о CMS :)
             if files['name'] == "index.php":
-                file_content = fs.get_file_content(files['path'])
+                file_content = fs_mod.FileSystem.get_file_content(files['path'])
                 if file_content is not None:
                     if "Joomla.Site" in file_content:
                         value = value + 1
@@ -134,7 +134,7 @@ class CMS:
                         value = value + 1
         
         # Смотрим, есть ли файл с версией.
-        file_content = fs.get_file_content(os.path.join(self.__path, joomla_version_file))
+        file_content = fs_mod.FileSystem.get_file_content(os.path.join(self.__path, joomla_version_file))
         # print(file_content)
         if file_content is not None:
             if "Joomla!" in file_content:
