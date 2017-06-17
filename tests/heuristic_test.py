@@ -17,3 +17,9 @@ class TestHeuristicMethods(unittest.TestCase):
         result = h.sigmoid(1)
         print(result)
         self.assertEqual(result, 0.7310585786300049, "Sigmoid function invalid")
+
+    def test_validate_file_name(self):
+        h = heuristic.Heuristic()
+        file_name = "sdfjkhc76.php" # 7 согласных подряд
+        result = h.validate_file_name(file_name)
+        self.assertEqual(result, 0.9990889488055994, "Warning level is incorrect")
