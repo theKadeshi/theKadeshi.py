@@ -240,6 +240,13 @@ class TheKadeshi:
                 if result:
                     cure_result['result'] = 'ok'
             
+            if element['action'] == 'quarantine':
+                try:
+                    os.rename(element['path'], element['path'] + '.suspected')
+                except PermissionError as e:
+                    cure_result['result'] = 'false'
+                    cure_result['result_message'] = e
+            
             rpt.append(cure_result)
         
         rpt.write_file()

@@ -9,7 +9,7 @@ class Database:
     Database class
     """
     
-    base_path: str = os.path.join(ROOT_DIR, "database/thekadeshi.db")
+    base_path: str = ""
     
     conn = None
     
@@ -17,20 +17,26 @@ class Database:
         """
         Constructor
         """
+        
         prefix_folders: list = ["./", "./database/", "../"]
+        
+        database_present: bool = False
         
         for prefix_folder in prefix_folders:
             current_base_path: str = os.path.join(ROOT_DIR, prefix_folder + "thekadeshi.db")
             if os.path.isfile(current_base_path):
+                database_present = True
                 self.base_path = current_base_path
                 break
         
-        print(self.base_path)
+        if not database_present:
+            print("Error. Database not found.")
+            exit(101)  # Database not found
         try:
             self.conn = sqlite3.connect(self.base_path)
         except sqlite3.OperationalError as e:
             print("Database error", e)
-            exit(1)
+            exit(102)  # Database connection error
     
     def get_hash_signatures(self):
         """
