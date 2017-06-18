@@ -1,14 +1,36 @@
 import math
 
 
+class IHeuristicCheckResult:
+    """
+    Empty check result structure
+    """
+    
+    # Check result
+    result: bool
+    
+    # What was detected
+    detected: str
+    
+    # Where it was detected
+    position: int
+    
+    def __init__(self):
+        self.result = False
+        self.detected = None
+        self.position = None
+
+
 class Heuristic:
     """
     Эвристическая проверка
     """
     
+    # Consonant letters
     consonants: list = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "x", "v", "w",
                         "z"]
     
+    # Dangerous PHP functions
     forbidden_functions: list = ["eval", "assert", "base64_decode", "str_rot13", "mail",
                                  "move_uploaded_file", "is_uploaded_file", "script",
                                  "fopen", "curl_init", "document.write", "$GLOBAL",
@@ -16,7 +38,8 @@ class Heuristic:
                                  "fromCharCode", "$_COOKIE", "$_POST", "$_GET", "copy", "navigator",
                                  "$_REQUEST", "array_filter", "str_replace"]
     
-    def sigmoid(self, x: float):
+    @staticmethod
+    def sigmoid(x: float):
         """
         Modified sigmoid function
         
@@ -37,7 +60,6 @@ class Heuristic:
         :rtype: float
         """
         
-        warning_level: float = 0
         consonant_counter: int = 0
         temporary_warning_level: int = 0
         for letter in file_name:
@@ -51,7 +73,7 @@ class Heuristic:
                 consonant_counter = 0
         
         warning_level = self.sigmoid(temporary_warning_level)
-        # print(consonant_counter, temporary_warning_level, warning_level)
+        
         return warning_level
     
     def validate_forbidden_functions(self, file_content: str):
@@ -61,15 +83,17 @@ class Heuristic:
         :param file_content: File content
         :type file_content: str
         :return: Validation result
-        :rtype: bool
+        :rtype: IHeuristicCheckResult
         """
         
-        check_result = {'result': False}
+        check_result: IHeuristicCheckResult = IHeuristicCheckResult()
         
         for func in self.forbidden_functions:
             function_position: int = file_content.find(func)
             if function_position != -1:
-                check_result = {'result': True, 'detected': func, 'position': function_position}
+                check_result.result = True
+                check_result.position = function_position
+                check_result.detected = func
                 break
         
         return check_result

@@ -13,7 +13,7 @@ class TheKadeshi:
     """
     Основной класс
     """
-
+    
     # Список расширений, которые будут сканироваться
     permitted_extensions = (".php", ".js", ".htm", ".html", "pl")
     
@@ -146,23 +146,21 @@ class TheKadeshi:
                 
                 # Heuristic mode is On
                 if not self.no_heuristic and not self.database_present:
-                    heuristic_result = heuristic.validate_forbidden_functions(str(content))
-                    if not heuristic_result['result']:
+                    heuristic_result: h_mod.IHeuristicCheckResult = heuristic.validate_forbidden_functions(str(content))
+                    if not heuristic_result.result:
                         need_to_scan = False
                 
                 if need_to_scan and self.database_present:
                     
                     # Если сканирование по хэш ничего не выявило, то ищем по сигнатурам
-                    # if len(self.signatures_database['r']):
                     try:
                         string_content = content.decode('utf-8')
-                    except UnicodeDecodeError as e:
+                    except UnicodeDecodeError:
                         string_content = content.decode('latin-1')
                     
                     for signature in self.signatures_database['r']:
                         matches = re.search(signature['expression'], string_content)
                         if matches is not None:
-                            need_to_scan = False
                             is_file_clean = False
                             start_position = matches.span()[0]
                             end_position = matches.span()[1]
@@ -177,10 +175,7 @@ class TheKadeshi:
                             }
                             # Прерываем цикл
                             break
-                else:
-                    # Очевидно с базой что-то не так
-                    heuristic_check_only = True
-                    pass
+            
             f.close()
             
             total_scanned = total_scanned + file_item['size']
@@ -205,15 +200,15 @@ class TheKadeshi:
                         if self.no_color:
                             file_message = "Infected: " + anamnesis_element['title']
                 else:
-                    if heuristic_result['result']:
+                    if heuristic_result.result:
                         if not self.no_color:
                             file_message = cls.C_L_YELLOW + "Suspected" + cls.C_DEFAULT + ": " + \
-                                           cls.C_RED + heuristic_result['detected'] + cls.C_DEFAULT + \
-                                           " found @ position " + str(heuristic_result['position'])
+                                           cls.C_RED + heuristic_result.detected + cls.C_DEFAULT + \
+                                           " found @ position " + str(heuristic_result.position)
                         
                         else:
-                            file_message = "Suspected: " + heuristic_result['detected'] + " found @ position " + \
-                                           str(heuristic_result['position'])
+                            file_message = "Suspected: " + heuristic_result.detected + " found @ position " + \
+                                           str(heuristic_result.position)
             
             print('[{0:.2f}% | {1!s}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, file_item['path'],
                                                                 file_message, sep=" ", end="", flush=True))
