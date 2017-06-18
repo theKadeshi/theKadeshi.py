@@ -34,6 +34,9 @@ class TheKadeshi:
     # База сигнатур
     signatures_database = {'h': [], 'r': []}
     
+    # No database. Heuristic scan only
+    database_present: bool = True
+    
     # site_path: str = "./", no_color: bool = False, no_heuristic: bool = False
     def __init__(self, arguments):
         """
@@ -70,6 +73,9 @@ class TheKadeshi:
         db = dbase.Database()
         self.signatures_database['h'] = db.get_hash_signatures()
         self.signatures_database['r'] = db.get_regexp_signatures()
+        
+        if len(self.signatures_database['h']) == 0 and len(self.signatures_database['h']) == 0:
+            self.database_present = False
     
     def scan_files(self):
         """
@@ -117,60 +123,70 @@ class TheKadeshi:
                 
                 # Если нет ошибок чтения, то сканируем
                 if len(content) > 0:
-                    # Хеш сумма файла
-                    file_hash: str = hashlib.sha256(content).hexdigest()
-                    # print(file_hash, file_item['path'])
                     
-                    for signature in self.signatures_database['h']:
-                        if file_hash == signature['expression']:
-                            
-                            is_file_clean = False
-                            
-                            anamnesis_element = {
-                                'id': signature['id'],
-                                'type': 'h',
-                                'path': file_item['path'],
-                                'title': signature['title'],
-                                'action': signature['action']
-                            }
-                            
-                            if signature['action'] == 'delete':
-                                need_to_scan = False
-                            
-                            # Прерываем цикл
-                            break
-                    
-                    # Heuristic mode is On
-                    if not self.no_heuristic:
-                        if not heuristic.validate_forbidden_functions(str(content)):
-                            need_to_scan = False
-                    
-                    # Если сканирование по хэщ ничего не выявило, то ищем по сигнатурам
-                    if need_to_scan:
-                        try:
-                            string_content = content.decode('utf-8')
-                        except UnicodeDecodeError as e:
-                            string_content = content.decode('latin-1')
+                    # No need to check if database is absent
+                    if self.database_present:
+                        # Хеш сумма файла
+                        file_hash: str = hashlib.sha256(content).hexdigest()
                         
-                        for signature in self.signatures_database['r']:
-                            matches = re.search(signature['expression'], string_content)
-                            if matches is not None:
-                                need_to_scan = False
+                        # if len(self.signatures_database['h']) > 0:
+                        for signature in self.signatures_database['h']:
+                            if file_hash == signature['expression']:
+                                
                                 is_file_clean = False
-                                start_position = matches.span()[0]
-                                end_position = matches.span()[1]
                                 
                                 anamnesis_element = {
                                     'id': signature['id'],
-                                    'type': 'r',
+                                    'type': 'h',
                                     'path': file_item['path'],
                                     'title': signature['title'],
-                                    'action': signature['action'],
-                                    'cure': {'start': start_position, 'end': end_position}
+                                    'action': signature['action']
                                 }
+                                
+                                if signature['action'] == 'delete':
+                                    need_to_scan = False
+                                
                                 # Прерываем цикл
                                 break
-                f.close()
+                
+                # Heuristic mode is On
+                if not self.no_heuristic and not self.database_present:
+                    heuristic_result = heuristic.validate_forbidden_functions(str(content))
+                    if not heuristic_result['result']:
+                        need_to_scan = False
+                
+                if need_to_scan and self.database_present:
+                    
+                    # Если сканирование по хэш ничего не выявило, то ищем по сигнатурам
+                    # if len(self.signatures_database['r']):
+                    try:
+                        string_content = content.decode('utf-8')
+                    except UnicodeDecodeError as e:
+                        string_content = content.decode('latin-1')
+                    
+                    for signature in self.signatures_database['r']:
+                        matches = re.search(signature['expression'], string_content)
+                        if matches is not None:
+                            need_to_scan = False
+                            is_file_clean = False
+                            start_position = matches.span()[0]
+                            end_position = matches.span()[1]
+                            
+                            anamnesis_element = {
+                                'id': signature['id'],
+                                'type': 'r',
+                                'path': file_item['path'],
+                                'title': signature['title'],
+                                'action': signature['action'],
+                                'cure': {'start': start_position, 'end': end_position}
+                            }
+                            # Прерываем цикл
+                            break
+                else:
+                    # Очевидно с базой что-то не так
+                    heuristic_check_only = True
+                    pass
+            f.close()
             
             total_scanned = total_scanned + file_item['size']
             current_time = time.time()
@@ -186,12 +202,23 @@ class TheKadeshi:
             if is_file_error:
                 file_message = "Error"
             else:
-                if not is_file_clean:
-                    file_message = cls.C_RED + "Infected" + cls.C_DEFAULT + ": " + cls.C_L_YELLOW + anamnesis_element[
-                        'title'] + cls.C_DEFAULT
-                    
-                    if self.no_color:
-                        file_message = "Infected: " + anamnesis_element['title']
+                if self.database_present:
+                    if not is_file_clean:
+                        file_message = cls.C_RED + "Infected" + cls.C_DEFAULT + ": " + cls.C_L_YELLOW + \
+                                       anamnesis_element['title'] + cls.C_DEFAULT
+                        
+                        if self.no_color:
+                            file_message = "Infected: " + anamnesis_element['title']
+                else:
+                    if heuristic_result['result']:
+                        if not self.no_color:
+                            file_message = cls.C_L_YELLOW + "Suspected" + cls.C_DEFAULT + ": " + \
+                                           cls.C_RED + heuristic_result['detected'] + cls.C_DEFAULT + \
+                                           " found @ position" + str(heuristic_result['position'])
+                        
+                        else:
+                            file_message = "Suspected: " + heuristic_result['detected'] + " found @ position " + \
+                                           str(heuristic_result['position'])
             
             print('[{0:.2f}% | {1!s}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, file_item['path'],
                                                                 file_message, sep=" ", end="", flush=True))

@@ -6,7 +6,8 @@ class Heuristic:
     Эвристическая проверка
     """
     
-    consonants: list = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "x", "v", "w", "z"]
+    consonants: list = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "x", "v", "w",
+                        "z"]
     
     forbidden_functions: list = ["eval", "assert", "base64_decode", "str_rot13", "mail",
                                  "move_uploaded_file", "is_uploaded_file", "script",
@@ -63,11 +64,12 @@ class Heuristic:
         :rtype: bool
         """
         
-        result: bool = False
+        check_result = {'result': False}
         
         for func in self.forbidden_functions:
-            if file_content.find(func) != -1:
-                result = True
+            function_position: int = file_content.find(func)
+            if function_position != -1:
+                check_result = {'result': True, 'detected': func, 'position': function_position}
                 break
         
-        return result
+        return check_result

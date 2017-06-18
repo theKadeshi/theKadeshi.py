@@ -13,6 +13,9 @@ class Database:
     
     conn = None
     
+    # Флаг работы без базы
+    no_database: bool = False
+    
     def __init__(self):
         """
         Constructor
@@ -30,13 +33,16 @@ class Database:
                 break
         
         if not database_present:
-            print("Error. Database not found.")
-            exit(101)  # Database not found
+            print("Error 101. Database not found.")
+            self.no_database = True
         try:
             self.conn = sqlite3.connect(self.base_path)
         except sqlite3.OperationalError as e:
-            print("Database error", e)
-            exit(102)  # Database connection error
+            print("Error 102. Database error", e)
+            self.no_database = True
+        
+        if self.no_database:
+            print("Heuristic check only")
     
     def get_hash_signatures(self):
         """
@@ -47,21 +53,21 @@ class Database:
         """
         
         signatures: list = []
-        # conn = sqlite3.connect(self.base_path)
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "SELECT title, hash, action, type, id FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
-        results = cursor.fetchall()
         
-        # print(results)
-        
-        for result in results:
-            signatures.append({
-                'id': result[4],
-                'title': "KDSH." + result[3].upper() + "." + result[0],
-                'expression': result[1],
-                'action': result[2]
-            })
+        if not self.no_database:
+            
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "SELECT title, hash, action, type, id FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
+            results = cursor.fetchall()
+            
+            for result in results:
+                signatures.append({
+                    'id': result[4],
+                    'title': "KDSH." + result[3].upper() + "." + result[0],
+                    'expression': result[1],
+                    'action': result[2]
+                })
         
         return signatures
     
@@ -74,33 +80,32 @@ class Database:
         """
         
         signatures: list = []
-        # conn = sqlite3.connect(self.base_path)
-        cursor = self.conn.cursor()
-        cursor.execute("""
-            SELECT title, expression, flags, action, type, id
-            FROM signatures_regexp
-            WHERE status = 1 ORDER BY popularity DESC""")
-        results = cursor.fetchall()
         
-        # print(results)
+        if not self.no_database:
+            
+            cursor = self.conn.cursor()
+            cursor.execute("""
+                SELECT title, expression, flags, action, type, id
+                FROM signatures_regexp
+                WHERE status = 1 ORDER BY popularity DESC""")
+            results = cursor.fetchall()
+            
+            for result in results:
+                flag = re.IGNORECASE
+                if result[2] == 'im':
+                    flag = re.IGNORECASE | re.MULTILINE
+                if result[2] == 'is':
+                    flag = re.IGNORECASE | re.DOTALL
+                if result[2] == 's':
+                    flag = re.DOTALL | re.UNICODE
+                signatures.append({
+                    'id': result[5],
+                    'title': "KDSH." + result[4].upper() + "." + result[0],
+                    'expression': re.compile(result[1], flag),
+                    'flag': result[2],
+                    'action': result[3]
+                })
         
-        for result in results:
-            flag = re.IGNORECASE
-            if result[2] == 'im':
-                flag = re.IGNORECASE | re.MULTILINE
-            if result[2] == 'is':
-                flag = re.IGNORECASE | re.DOTALL
-            if result[2] == 's':
-                flag = re.DOTALL | re.UNICODE
-            signatures.append({
-                'id': result[5],
-                'title': "KDSH." + result[4].upper() + "." + result[0],
-                'expression': re.compile(result[1], flag),
-                'flag': result[2],
-                'action': result[3]
-            })
-        
-        # conn.close()
         return signatures
     
     def __exit__(self, exception_type, exception_value, traceback):
@@ -110,4 +115,5 @@ class Database:
         :return:
         """
         
-        self.conn.close()
+        if not self.no_database:
+            self.conn.close()
