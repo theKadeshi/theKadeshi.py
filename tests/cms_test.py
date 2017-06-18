@@ -8,7 +8,7 @@ class TestCMSMethods(unittest.TestCase):
     Тесты для модуля определения CMS
     """
     
-    wordpress_folder = "../mock/folder-02/wordpress-4.7.5/"
+    wordpress_folder = "../mock/folder-02/wordpress-4.7.5/wordpress"
     
     def test_is_it_wordpress(self):
         """
@@ -98,10 +98,10 @@ class TestCMSMethods(unittest.TestCase):
     def test_detect_wordpress_fore(self):
         """ Проверка определения вордпресса версии 4.7.5 """
         
-        if os.path.exists("../mock/folder-02/wordpress-4.7.5/"):
+        if os.path.exists("../mock/folder-02/wordpress-4.7.5/wordpress/"):
             cms = cms_module.CMS(self.wordpress_folder)
             function_result = cms.detect()
-            # print(function_result)
+            print(function_result)
             self.assertEqual(function_result['cms'], 'wordpress', "CMS определена не правильно")
             self.assertEqual(function_result['version'], '4.7.5', "Версия CMS определена не правильно")
     

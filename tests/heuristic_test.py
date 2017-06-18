@@ -61,7 +61,7 @@ class TestHeuristicMethods(unittest.TestCase):
         h = heuristic.Heuristic()
         file_content = "print(eval(assert()));"
         result = h.validate_forbidden_functions(file_content)
-        self.assertEqual(result, True, "Function warning is incorrect")
+        self.assertEqual(result.result, True, "Function warning is incorrect")
     
     def test_validate_forbidden_functions_false(self):
         """
@@ -73,4 +73,4 @@ class TestHeuristicMethods(unittest.TestCase):
         h = heuristic.Heuristic()
         file_content = "print(some(valid(function)));"
         result = h.validate_forbidden_functions(file_content)
-        self.assertEqual(result, False, "Function warning is incorrect")
+        self.assertEqual(result.result, False, "Function warning is incorrect")

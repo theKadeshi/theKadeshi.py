@@ -1,5 +1,5 @@
 import math
-
+import re
 
 class IHeuristicCheckResult:
     """
@@ -50,6 +50,22 @@ class Heuristic:
         """
         return 2 / (1 + math.exp(-x / 2)) - 1
     
+    def validate_content(self, file_content: str):
+        """
+        Heuristic detection
+        
+        :param file_content: File text content
+        :type file_content: str
+        :return:
+        :rtype: IHeuristicCheckResult
+        """
+        result: IHeuristicCheckResult = self.validate_forbidden_functions(file_content)
+        
+        if not result.result:
+            result = self.validate_long_words(file_content)
+        
+        return result
+    
     def validate_consonants_file_name(self, file_name: str):
         """
         Validate file name
@@ -75,6 +91,29 @@ class Heuristic:
         warning_level = self.sigmoid(temporary_warning_level)
         
         return warning_level
+    
+    @staticmethod
+    def validate_long_words(file_content: str):
+        """
+        Looking for long words in file content
+        
+        :param file_content: File content
+        :type file_content: str
+        :return:
+        :rtype: IHeuristicCheckResult
+        """
+        
+        check_result: IHeuristicCheckResult = IHeuristicCheckResult()
+        words_list = re.split('[.,/;:"\'!?(){}\[\]%$#@^&*+=<>\\\ |\d]+', str(file_content))
+        for word in words_list:
+            if len(word) > 25:
+                word_position = file_content.find(word)
+                check_result.result = True
+                check_result.detected = 'Long word'
+                check_result.position = word_position
+                break
+        
+        return check_result
     
     def validate_forbidden_functions(self, file_content: str):
         """

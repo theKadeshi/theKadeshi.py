@@ -3,8 +3,8 @@ class FileSystem:
     Filesystem class
     """
     
-    @staticmethod
-    def get_file_content(file_path: str):
+    # @staticmethod
+    def get_file_content(self, file_path: str):
         """
         Функция получения содержимого файла.
         Ошибки замалчиваютя, потому что делать с ними пока нечего
@@ -21,7 +21,7 @@ class FileSystem:
                 file_content = f.read()
                 f.close()
         except FileNotFoundError as e:
-            # print("FileNotFoundError", e)
+            print("FileNotFoundError", e)
             pass
         
         return file_content

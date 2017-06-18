@@ -107,7 +107,6 @@ class TheKadeshi:
             
             heuristic_result: h_mod.IHeuristicCheckResult = h_mod.IHeuristicCheckResult()
             
-            # with open(file_item['path'], encoding="latin-1", mode='rb') as f:
             with open(file_item['path'], mode='rb') as f:
                 
                 # Тут у нас обработчик ошибок.
@@ -149,7 +148,7 @@ class TheKadeshi:
                 
                 # Heuristic mode is On
                 if not self.no_heuristic:
-                    heuristic_result: h_mod.IHeuristicCheckResult = heuristic.validate_forbidden_functions(str(content))
+                    heuristic_result: h_mod.IHeuristicCheckResult = heuristic.validate_content(str(content))
                     if not heuristic_result.result:
                         need_to_scan = False
                 
@@ -179,7 +178,7 @@ class TheKadeshi:
                             # Прерываем цикл
                             break
                 
-                f.close()
+            f.close()
             
             total_scanned = total_scanned + file_item['size']
             current_time = time.time()
