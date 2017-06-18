@@ -5,9 +5,10 @@
 ```bash
 python main.py [options] /home/name/your-site-folder/
 ```
-* `-h` - Help
-* `-v` - Version
+* `-h`  - Help
+* `-v`  - Version
 * `-nc` - Disable color output
+* `-nh` - Disable heuristic detection
 
 #### Requirements ####
 * Python 3.6+
