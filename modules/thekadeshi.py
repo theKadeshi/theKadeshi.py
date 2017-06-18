@@ -147,6 +147,7 @@ class TheKadeshi:
                                 break
                 
                 # Heuristic mode is On
+                # print(file_item['path'])
                 if not self.no_heuristic:
                     heuristic_result: h_mod.IHeuristicCheckResult = heuristic.validate_content(str(content))
                     if not heuristic_result.result:
@@ -177,7 +178,7 @@ class TheKadeshi:
                             }
                             # Прерываем цикл
                             break
-                
+            
             f.close()
             
             total_scanned = total_scanned + file_item['size']
