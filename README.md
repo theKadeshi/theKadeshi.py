@@ -10,4 +10,4 @@ python main.py [options] /home/name/your-site-folder/
 * `-nc` - Disable color output
 
 #### Requirements ####
-* Python 3.5+
+* Python 3.6+
