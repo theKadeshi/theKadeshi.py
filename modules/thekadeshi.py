@@ -71,6 +71,7 @@ class TheKadeshi:
         
         if len(self.signatures_database['h']) == 0 and len(self.signatures_database['h']) == 0:
             self.database_present = False
+            self.no_heuristic = False
     
     def scan_files(self):
         """
@@ -103,6 +104,8 @@ class TheKadeshi:
             
             # Флаг, нужно ли продолжать сканирование
             need_to_scan: bool = True
+            
+            heuristic_result: h_mod.IHeuristicCheckResult = h_mod.IHeuristicCheckResult()
             
             # with open(file_item['path'], encoding="latin-1", mode='rb') as f:
             with open(file_item['path'], mode='rb') as f:
@@ -145,7 +148,7 @@ class TheKadeshi:
                                 break
                 
                 # Heuristic mode is On
-                if not self.no_heuristic and not self.database_present:
+                if not self.no_heuristic:
                     heuristic_result: h_mod.IHeuristicCheckResult = heuristic.validate_forbidden_functions(str(content))
                     if not heuristic_result.result:
                         need_to_scan = False
@@ -175,8 +178,8 @@ class TheKadeshi:
                             }
                             # Прерываем цикл
                             break
-            
-            f.close()
+                
+                f.close()
             
             total_scanned = total_scanned + file_item['size']
             current_time = time.time()
