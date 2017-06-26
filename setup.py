@@ -2,7 +2,8 @@ from cx_Freeze import setup, Executable
 
 buildOptions = dict(packages=[],
                     include_files=['./database/thekadeshi.db'],
-                    exclude_files=["./tests"])
+                    # exclude_files=["./tests"]
+                    )
 
 setup(
     name='theKadeshi',
