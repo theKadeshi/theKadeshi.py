@@ -7,7 +7,7 @@ buildOptions = dict(packages=[],
 
 setup(
     name='theKadeshi',
-    version='0.0.1',
+    version='0.0.3',
     # packages=[''],
     # package_dir={'': 'modules', 'database': 'database'},
     url='http://thekadeshi.com',
