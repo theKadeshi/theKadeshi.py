@@ -87,7 +87,7 @@ class Database:
             cursor.execute("""
                 SELECT title, expression, flags, action, type, id
                 FROM signatures_regexp
-                WHERE status = 1 ORDER BY popularity DESC""")
+                WHERE status = 1 ORDER BY action DESC, popularity DESC""")
             results = cursor.fetchall()
             
             for result in results:
