@@ -74,3 +74,11 @@ class TestHeuristicMethods(unittest.TestCase):
         file_content = "print(some(valid(function)));"
         result = h.validate_forbidden_functions(file_content)
         self.assertEqual(result.result, False, "Function warning is incorrect")
+    
+    def test_convert_string_to_hex(self):
+        h = heuristic.Heuristic()
+        
+        test_function = "assert"
+        
+        result = h.convert_string_to_hex(test_function)
+        self.assertEqual(result, "\\x61\\x73\\x73\\x65\\x72\\x74", "encode error")

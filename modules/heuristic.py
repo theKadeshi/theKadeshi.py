@@ -134,5 +134,21 @@ class Heuristic:
                 check_result.position = function_position
                 check_result.detected = func
                 break
+            else:
+                function_position: int = file_content.find(self.convert_string_to_hex(func))
+                if function_position != -1:
+                    check_result.result = True
+                    check_result.position = function_position
+                    check_result.detected = func
+                    break
         
         return check_result
+
+    def convert_string_to_hex(self, function_string: str):
+        
+        result: str = ""
+        for char in str.encode(function_string, 'ascii'):
+            # print (char)
+            result += "\\\\x" + str(hex(char)).replace("0x", "")
+            
+        return result
