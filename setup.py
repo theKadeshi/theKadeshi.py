@@ -7,10 +7,10 @@ buildOptions = dict(packages=[],
 
 setup(
     name='theKadeshi',
-    version='0.0.3',
+    version='0.0.5',
     # packages=[''],
     # package_dir={'': 'modules', 'database': 'database'},
-    url='http://thekadeshi.com',
+    url='https://thekadeshi.com',
     license='MIT',
     author='theKadeshi',
     author_email='info@thekadeshi.com',
