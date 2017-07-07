@@ -1,6 +1,6 @@
 import hashlib
 
-with open("../mock/virus0253.php", mode='rb') as f:
+with open("../mock/SQLyogTunnel82.php", mode='rb') as f:
     # Тут у нас обработчик ошибок.
     try:
         content = f.read()
