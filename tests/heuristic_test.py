@@ -9,11 +9,76 @@ class TestHeuristicMethods(unittest.TestCase):
     
     def test_get_hash_signatures(self):
         """
-        Пустая функция проверки. Задел на будущее
+        Проверка вычисления измененной сигмоиды
         
         :return:
         """
         h = heuristic.Heuristic()
         result = h.sigmoid(1)
-        print(result)
-        self.assertEqual(result, 0.7310585786300049, "Sigmoid function invalid")
+        # print(result)
+        self.assertEqual(result, 0.2449186624037092, "Sigmoid function invalid")
+    
+    def test_validate_consonants_file_name(self):
+        """
+        Проверка работы функции отлова 7 согласных подряд в имени файла
+
+        :return:
+        """
+        h = heuristic.Heuristic()
+        file_name = "sdfjkhc76.php"  # 7 согласных подряд
+        result = h.validate_consonants_file_name(file_name)
+        self.assertEqual(result, 0.9413755384972873, "Warning level is incorrect")
+    
+    def test_validate_consonants_file_name_three_letters(self):
+        """
+        Проверка работы функции отлова 3 согласных подряд в имени файла
+
+        :return:
+        """
+        h = heuristic.Heuristic()
+        file_name = "sdduck76.com"  # 3 согласных подряд
+        result = h.validate_consonants_file_name(file_name)
+        self.assertEqual(result, 0, "Warning level is incorrect")
+    
+    def test_validate_consonants_file_name_fore_letters(self):
+        """
+        Проверка работы функции отлова 4 согласных подряд в имени файла
+
+        :return:
+        """
+        h = heuristic.Heuristic()
+        file_name = "msdduck76.com"  # 4 согласных подряд
+        result = h.validate_consonants_file_name(file_name)
+        self.assertEqual(result, 0.7615941559557646, "Warning level is incorrect")
+    
+    def test_validate_forbidden_functions_true(self):
+        """
+        Проверка работы функции поиска запрещенных слов в контенте
+
+        :return:
+        """
+        
+        h = heuristic.Heuristic()
+        file_content = "print(eval(assert()));"
+        result = h.validate_forbidden_functions(file_content)
+        self.assertEqual(result.result, True, "Function warning is incorrect")
+    
+    def test_validate_forbidden_functions_false(self):
+        """
+        Проверка работы функции поиска запрещенных слов в контенте
+        
+        :return:
+        """
+        
+        h = heuristic.Heuristic()
+        file_content = "print(some(valid(function)));"
+        result = h.validate_forbidden_functions(file_content)
+        self.assertEqual(result.result, False, "Function warning is incorrect")
+    
+    def test_convert_string_to_hex(self):
+        h = heuristic.Heuristic()
+        
+        test_function = "assert"
+        
+        result = h.convert_string_to_hex(test_function)
+        self.assertEqual(result, "\\x61\\x73\\x73\\x65\\x72\\x74", "encode error")

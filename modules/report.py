@@ -4,9 +4,21 @@ import modules.colors as cls
 
 
 class Report:
+    """
+    Report class
+    """
+    
     report_list = []
     
     def append(self, element):
+        """
+        Temporary function
+        
+        :todo: fixme
+        :param element:
+        :return:
+        """
+        
         self.report_list.append({
             'path': element['path'],
             'time': time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -22,6 +34,14 @@ class Report:
         pass
     
     def write_file(self):
+        """
+        Temporary function
+
+        :todo: fixme
+        :param element:
+        :return:
+        """
+        
         file = open("testfile.json", "w")
         
         file.write(json.dumps(self.report_list))
@@ -31,6 +51,14 @@ class Report:
         # print(json.dumps(self.report_list))
     
     def output(self):
+        """
+        Temporary function
+
+        :todo: fixme
+        :param element:
+        :return:
+        """
+        
         for elem in self.report_list:
             action_color = cls.C_GREEN
             error_string = ""
