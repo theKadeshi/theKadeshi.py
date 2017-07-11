@@ -4,7 +4,7 @@ import modules.thekadeshi as the_kadeshi
 
 if __name__ == "__main__":
     print("Ready")
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='There is the options.')
     parser.register("type", "bool", lambda v: v.lower() == "true")
     parser.add_argument(
         "site",
