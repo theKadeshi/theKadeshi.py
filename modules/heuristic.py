@@ -36,7 +36,7 @@ class Heuristic:
                                  "fopen", "curl_init", "document.write", "$GLOBAL",
                                  "passthru", "system", "exec", "header", "preg_replace",
                                  "fromCharCode", "$_COOKIE", "$_POST", "$_GET", "copy", "navigator",
-                                 "$_REQUEST", "array_filter", "str_replace", "refresh"]
+                                 "$_REQUEST", "array_filter", "str_replace", "refresh", "invokeArgs"]
     
     @staticmethod
     def sigmoid(x: float):
