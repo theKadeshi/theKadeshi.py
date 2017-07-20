@@ -15,7 +15,7 @@ class TheKadeshi:
     """
     
     # Список расширений, которые будут сканироваться
-    permitted_extensions = (".php", ".js", ".htm", ".html", "pl")
+    permitted_extensions = (".php", ".js", ".htm", ".html", "pl", "py")
     
     # Список зараженных файлов
     anamnesis_list: list = []

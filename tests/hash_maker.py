@@ -1,6 +1,6 @@
 import hashlib
 
-with open("../mock/12309.php", mode='rb') as f:
+with open("../mock/php/phpkit-0.1a/phpkit.py", mode='rb') as f:
     # Тут у нас обработчик ошибок.
     try:
         content = f.read()
