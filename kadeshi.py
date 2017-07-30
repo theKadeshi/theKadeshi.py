@@ -15,14 +15,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "-nc", "--no-color",
         action='store_true',
-        help="Disable color output"
+        help="Disable color output. Enabled by default"
     )
     parser.add_argument(
         "-nh", "--no-heuristic",
         action="store_true",
-        help="Disable heuristic detection. Check all files"
+        help="Disable heuristic detection. Check all files. Enabled by default"
     )
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.0.1')
+    parser.add_argument(
+        "-dc", "--no-cure",
+        action="store_true",
+        help="Disable malware cleanup. Enabled by default"
+    )
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.0.9')
     
     args = parser.parse_args()
     
