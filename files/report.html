@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xml:lang="ru" lang="ru" ng-app="kadeshiReportApp">
+<head itemscope itemtype="http://schema.org/WebSite">
+	<meta name="viewport" content="width=device-width, maximum-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title itemprop="name" content="theKadeshi">theKadeshi scan report</title>
+	<link rel="shortcut icon" type="image/x-icon" href="https://thekadeshi.com/favicon.ico"/>
+	<link rel="apple-touch-icon" sizes="180x180" href="https://thekadeshi.com/icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://thekadeshi.com/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://thekadeshi.com/icons/favicon-16x16.png">
+	<link rel="manifest" href="https://thekadeshi.com/icons/manifest.json">
+	<link rel="mask-icon" href="https://thekadeshi.com/icons/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="theme-color" content="#ffffff">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="robots" content="noindex, follow"/>
+	<style>
+		body {
+			margin-top: 60px;
+		}
+
+		#main {
+			min-height: 500px;
+		}
+
+		#main::before {
+			background-image: url(https://thekadeshi.com/logo.svg);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: contain;
+			position: fixed;
+			opacity: 0.05;
+			height: 100vh;
+			width: 100%;
+			margin: 0 auto;
+			overflow: hidden;
+			top: 60px;
+			left: 0;
+		}
+
+		td.title:hover {
+			cursor: pointer;
+		}
+
+		.table-hover > tbody > tr:hover {
+			background-color: rgba(245, 245, 245, 0.7);
+		}
+	</style>
+</head>
+<body ng-controller="ReportListController">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+					  aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#" title="theKadeshi report">theKadeshi</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">Home</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="#contact">Contact</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false">Dropdown <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Action</a></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li role="separator" class="divider"></li>
+						<li class="dropdown-header">Nav header</li>
+						<li><a href="#">Separated link</a></li>
+						<li><a href="#">One more separated link</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</nav>
+<div id="main" class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<h1>theKadeshi scan report</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th>#</th>
+					<th>File</th>
+					<th>Infection</th>
+					<th>Action</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="file in scanResult">
+					<td>{{ $index }}</td>
+					<td>{{ file.path }}<br/>
+						<small>@ position {{file.cure.start}}, length {{file.cure.length}} symbols</small>
+						<small class="text-muted">{{ decoder(file.cure.sample) }}</small>
+					</td>
+					<td class="title" data-code="{{titleConverter(file.title)}}">{{ file.title }}</td>
+					<td>{{ file.action }}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	var scanResult = [{
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0101.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.Uploader.0101",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0102.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.Mailer.0102",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0103.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.BackDoor.PclZip.0103",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0104.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.Uploader.0104",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0105.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.Backdoor.0105",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0107.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.Encoded.0107",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0108.php",
+		"time": "2017-07-30 18:54:28",
+		"title": "KDSH.PHP.Mailer.0108",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0109.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Eval.0109",
+		"action": "cure",
+		"result": {"value": "ok", "message": ""},
+		"cure": {
+			"start": 518,
+			"end": 12347,
+			"length": 11829,
+			"sample": "ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJEdMT0JBTFNbJ3IwYmE3ZDBjNSddO2dsb2JhbCRyMGJhN2QwYzU7JHIwYmE3ZDBjNT0kR0xPQkFMUzskcjBiYTdkMGM1Wyd2N2RlNCddPSI="
+		}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0110.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Eval.0110",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0113.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Dorgen.0113",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0115.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Encoded.0115",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0116.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.b374k.0116-1",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0117.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Mailer.0117",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0120.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Eval.0120",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0121.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Mailer.0121",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0122.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Jpeg.Encoded.0122",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0123.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Mailer.0123",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0124.php",
+		"time": "2017-07-30 18:56:43",
+		"title": "KDSH.PHP.Shell.0124",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0125.php",
+		"time": "2017-07-30 18:56:59",
+		"title": "KDSH.PHP.Assert.0125",
+		"action": "cure",
+		"result": {"value": "ok", "message": ""},
+		"cure": {
+			"start": 8,
+			"end": 148,
+			"length": 140,
+			"sample": "PD9waHAgDQppZiAoICRfUkVRVUVTVFsiYXJyYXkiXSApDQp7CQ0KDQoJQGFzc2VydChiYXNlNjRfZGVjb2RlKCRfUkVRVUVTVFsiYXJyYXkiXSkpOwkNCg=="
+		}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0126.php",
+		"time": "2017-07-30 18:56:59",
+		"title": "KDSH.PHP.Uploader.0126",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0134.php",
+		"time": "2017-07-30 18:56:59",
+		"title": "KDSH.PHP.Dorgen.0134",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0135.php",
+		"time": "2017-07-30 18:56:59",
+		"title": "KDSH.PHP.Eval.0135",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0138.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Global.0010",
+		"action": "cure",
+		"result": {"value": "ok", "message": ""},
+		"cure": {
+			"start": 7,
+			"end": 7998,
+			"length": 7991,
+			"sample": "PD9waHANCiR4MjcgPSAiSUNcdFhiJjdzQlxuWnpbeXg8UiknXT4oTTJPTnxQK0s7YyNHbmRlVnVtNUpofnI2Rjh0Mz93IVRBZlNnMFwicVV9WWFMVy5I"
+		}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0141.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Adminer.0141",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0147.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Uploader.0147",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0150.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Mailer.0150",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0155.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Shell.0155",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0164.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Eval.0164",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0167.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Globals.Eval.0167",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0171.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Eval.0171",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0172.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.DarkShell.0172",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0173.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Encoded.0173",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0174.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.DB.Shell.0174",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0176.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.DarkShell.0176",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0185.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Uploader.0185",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0187.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Backdor.Orb.0187",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0189.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Shell.0263",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0190.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Mailer.0190",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0192.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Backdor.Orb.0192",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0193.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.DB.Shell.0193",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0197.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Encoded.0197",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0198.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Uploader.0198",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0199.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Encoded.0199",
+		"action": "cure",
+		"result": {"value": "ok", "message": ""},
+		"cure": {
+			"start": 0,
+			"end": 80825,
+			"length": 80825,
+			"sample": "PD9waHANCiRPX19PTzBfMDBPPSd2Y3JUWDM3NSc7DQokT09PME9fXzAwXz02NzsNCiRPXzBfT18wT08wPSdCL0MvRC1hYzEyYTEyLmh0bWw="
+		}
+	}, {
+		"path": "C:\\Users\\Nick\\PycharmProjects\\theKadeshi.py\\mock\\0101-0200\\virus0200.php",
+		"time": "2017-07-30 18:57:02",
+		"title": "KDSH.PHP.Shell.0200",
+		"action": "delete",
+		"result": {"value": "ok", "message": ""},
+		"cure": {"start": 0, "end": 0, "length": 0, "sample": ""}
+	}];
+	// console.log(JSON.parse(scanResult));
+	kadeshiReportApp = angular.module('kadeshiReportApp', []);
+	// var scanResult = '{{% Result_Json %}}';
+	kadeshiReportApp.controller('ReportListController', function ReportListController($scope) {
+		$scope.scanResult = scanResult;
+
+		$scope.decoder = function (value) {
+			return window.atob(value);
+		};
+
+		$scope.titleConverter = function (value) {
+			var resultString = value.toLowerCase().replace(/\./g, '-');
+			return resultString;
+		};
+	});
+
+
+</script>
+</body>
+</html>

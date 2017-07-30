@@ -1,5 +1,9 @@
 import time
 import json
+import os
+
+import sys
+
 import modules.colors as cls
 
 
@@ -27,11 +31,14 @@ class Report:
             'result': {
                 'value': element['result'],
                 'message': str(element['result_message'])
+            },
+            'cure': {
+                'start': element['cure']['start'],
+                'end': element['cure']['end'],
+                'length': element['cure']['length'],
+                'sample': element['cure']['sample'],
             }
         })
-        
-        # print(self.report_list)
-        pass
     
     def write_file(self):
         """
@@ -42,7 +49,13 @@ class Report:
         :return:
         """
         
-        file = open("testfile.json", "w")
+        file = open("thekadeshi.report.html", "w")
+        
+        report_template = self.load_template()
+        
+        rendered_template = report_template.replace('{{% Result_Json %}}', json.dumps(self.report_list))
+        
+        file.write(rendered_template)
         
         file.write(json.dumps(self.report_list))
         
@@ -73,3 +86,19 @@ class Report:
                 action_color + elem['action'] + cls.C_DEFAULT,
                 cls.C_RED + error_string + cls.C_DEFAULT
             ))
+    
+    @staticmethod
+    def load_template():
+        if getattr(sys, 'frozen', False):
+            current_folder = os.path.dirname(sys.executable)
+            template_path = 'report.html'
+        else:
+            current_folder = os.path.dirname(__file__)
+            template_path = '../files/report.html'
+        
+        total_path = os.path.join(current_folder, template_path)
+        
+        with open(total_path, "r") as report_template:
+            data = report_template.read()
+        
+        return data

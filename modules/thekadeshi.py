@@ -1,3 +1,4 @@
+import base64
 import os
 import hashlib
 import time
@@ -45,8 +46,6 @@ class TheKadeshi:
         self.no_color: bool = arguments.no_color
         self.no_heuristic: bool = arguments.no_heuristic
         self.no_cure: bool = arguments.no_cure
-        
-        print(self.no_cure)
     
     def get_files_list(self):
         """
@@ -238,8 +237,11 @@ class TheKadeshi:
                 'path': element['path'],
                 'action': element['action'],
                 'title': element['title'],
+                'type': element['type'],
                 'result': '',
-                'result_message': ''
+                'result_message': '',
+                'position': '',
+                'cure': {'start': 0, 'end': 0, 'length': 0, 'sample': ''}
             }
             
             # Удаление зараженного файла
@@ -259,9 +261,23 @@ class TheKadeshi:
                 if not self.no_cure:
                     file_content = fs.get_file_content(element['path'])
                     cure_result['result'] = 'cure'
-                    first_part: bytes = file_content[:element['cure']['start']]
-                    second_part: bytes = file_content[element['cure']['end']:]
                     
+                    slice_start: int = element['cure']['start']
+                    slice_end: int = element['cure']['end']
+                    
+                    first_part: bytes = file_content[:slice_start]
+                    second_part: bytes = file_content[slice_end:]
+                    
+                    # Sample code start position
+                    sample_start: int = 0
+                    if slice_start > 30:
+                        sample_start = slice_start - 30
+                    cure_result['cure']['start'] = slice_start
+                    cure_result['cure']['end'] = slice_end
+                    cure_result['cure']['length'] = slice_end - slice_start
+                    
+                    sample_slice = file_content[sample_start: slice_start + 80]
+                    cure_result['cure']['sample'] = str(base64.b64encode(sample_slice), 'ascii')
                     result = fs.put_file_content(element['path'], first_part + second_part)
                     cure_result['result'] = 'false'
                     if result:
