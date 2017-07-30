@@ -15,7 +15,7 @@ class TheKadeshi:
     """
     
     # Список расширений, которые будут сканироваться
-    permitted_extensions = (".php", ".js", ".htm", ".html", "pl")
+    permitted_extensions = (".php", ".js", ".htm", ".html", "pl", "py", "suspected")
     
     # Список зараженных файлов
     anamnesis_list: list = []
@@ -44,6 +44,9 @@ class TheKadeshi:
         self.site_folder: str = arguments.site
         self.no_color: bool = arguments.no_color
         self.no_heuristic: bool = arguments.no_heuristic
+        self.no_cure: bool = arguments.no_cure
+        
+        print(self.no_cure)
     
     def get_files_list(self):
         """
@@ -242,30 +245,39 @@ class TheKadeshi:
             # Удаление зараженного файла
             if element['action'] == 'delete':
                 try:
-                    os.remove(element['path'])
-                    cure_result['result'] = 'ok'
+                    if not self.no_cure:
+                        os.remove(element['path'])
+                        cure_result['result'] = 'ok'
+                    else:
+                        cure_result['result'] = 'disabled'
                 except PermissionError as e:
                     cure_result['result'] = 'false'
                     cure_result['result_message'] = e
             
             # Лечение зараженного файла
             if element['action'] == 'cure':
-                file_content = fs.get_file_content(element['path'])
-                cure_result['result'] = 'cure'
-                first_part: bytes = file_content[:element['cure']['start']]
-                second_part: bytes = file_content[element['cure']['end']:]
-                
-                result = fs.put_file_content(element['path'], first_part + second_part)
-                cure_result['result'] = 'false'
-                if result:
-                    cure_result['result'] = 'ok'
+                if not self.no_cure:
+                    file_content = fs.get_file_content(element['path'])
+                    cure_result['result'] = 'cure'
+                    first_part: bytes = file_content[:element['cure']['start']]
+                    second_part: bytes = file_content[element['cure']['end']:]
+                    
+                    result = fs.put_file_content(element['path'], first_part + second_part)
+                    cure_result['result'] = 'false'
+                    if result:
+                        cure_result['result'] = 'ok'
+                else:
+                    cure_result['result'] = 'disabled'
             
             if element['action'] == 'quarantine':
-                try:
-                    os.rename(element['path'], element['path'] + '.suspected')
-                except PermissionError as e:
-                    cure_result['result'] = 'false'
-                    cure_result['result_message'] = e
+                if not self.no_cure:
+                    try:
+                        os.rename(element['path'], element['path'] + '.suspected')
+                    except PermissionError as e:
+                        cure_result['result'] = 'false'
+                        cure_result['result_message'] = e
+                else:
+                    cure_result['result'] = 'disabled'
             
             rpt.append(cure_result)
         

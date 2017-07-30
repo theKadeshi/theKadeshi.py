@@ -1,6 +1,6 @@
 import hashlib
 
-with open("../mock/SQLyogTunnel82.php", mode='rb') as f:
+with open("../mock/php/phpkit-1.0/phpkitcli.py", mode='rb') as f:
     # Тут у нас обработчик ошибок.
     try:
         content = f.read()
