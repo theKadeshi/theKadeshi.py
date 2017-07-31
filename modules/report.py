@@ -3,6 +3,7 @@ import json
 import os
 
 import sys
+from datetime import datetime
 
 import modules.colors as cls
 
@@ -40,24 +41,25 @@ class Report:
             }
         })
     
-    def write_file(self):
+    def write_file(self, report_path):
         """
         Temporary function
 
+        :param report_path:
         :todo: fixme
         :param element:
         :return:
         """
+        report_filename = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
+        report_file = os.path.join(report_path, report_filename)
         
-        file = open("thekadeshi.report.html", "w")
+        file = open(report_file, "w")
         
         report_template = self.load_template()
         
-        rendered_template = report_template.replace('{{% Result_Json %}}', json.dumps(self.report_list))
+        rendered_template = report_template.replace('{Result_Json}', json.dumps(self.report_list))
         
         file.write(rendered_template)
-        
-        file.write(json.dumps(self.report_list))
         
         file.close()
         

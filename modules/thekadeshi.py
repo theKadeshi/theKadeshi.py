@@ -297,5 +297,5 @@ class TheKadeshi:
             
             rpt.append(cure_result)
         
-        rpt.write_file()
+        rpt.write_file(self.site_folder)
         rpt.output()
