@@ -6,7 +6,7 @@ buildOptions = dict(packages=[],
 
 setup(
     name='theKadeshi',
-    version='0.0.9',
+    version='0.1.10',
     url='https://thekadeshi.com',
     license='MIT',
     author='theKadeshi',

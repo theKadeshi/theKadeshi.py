@@ -27,7 +27,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Disable malware cleanup. Enabled by default"
     )
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.0.9')
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.1.10')
     
     args = parser.parse_args()
     
