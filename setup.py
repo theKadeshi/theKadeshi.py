@@ -1,12 +1,12 @@
 from cx_Freeze import setup, Executable
 
 buildOptions = dict(packages=[],
-                    include_files=['./database/thekadeshi.db'],
+                    include_files=['./database/thekadeshi.db', 'files/report.html']
                     )
 
 setup(
     name='theKadeshi',
-    version='0.0.9',
+    version='0.1.10',
     url='https://thekadeshi.com',
     license='MIT',
     author='theKadeshi',

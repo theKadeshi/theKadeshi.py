@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xml:lang="ru" lang="ru" ng-app="kadeshiReportApp">
+<head itemscope itemtype="http://schema.org/WebSite">
+	<meta name="viewport" content="width=device-width, maximum-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title itemprop="name" content="theKadeshi">theKadeshi scan report</title>
+	<link rel="shortcut icon" type="image/x-icon" href="https://thekadeshi.com/favicon.ico"/>
+	<link rel="apple-touch-icon" sizes="180x180" href="https://thekadeshi.com/icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://thekadeshi.com/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://thekadeshi.com/icons/favicon-16x16.png">
+	<link rel="manifest" href="https://thekadeshi.com/icons/manifest.json">
+	<link rel="mask-icon" href="https://thekadeshi.com/icons/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="theme-color" content="#ffffff">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="robots" content="noindex, follow"/>
+	<style>
+		body {
+			margin-top: 60px;
+			font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
+
+		.navbar-inverse {
+			background-color: #263238;
+		}
+
+		.navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > li > a:hover {
+			background-color: #37474F;
+		}
+
+		#main {
+			min-height: 500px;
+		}
+
+		#main::before {
+			background-image: url(https://thekadeshi.com/logo.svg);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: contain;
+			position: fixed;
+			opacity: 0.07;
+			height: 100vh;
+			width: 100%;
+			margin: 0 auto;
+			overflow: hidden;
+			top: 60px;
+			left: 0;
+		}
+
+		td.title:hover {
+			cursor: pointer;
+
+			text-decoration: underline;
+
+			transition: 1s;
+		}
+
+		td.action {
+			text-transform: capitalize;
+		}
+
+		.table-hover > tbody > tr:hover {
+			background-color: rgba(245, 245, 245, 0.7);
+		}
+
+		footer {
+			background-color: #263238;
+			color: #7d8186;
+			padding: 20px;
+		}
+
+		.bottom-logo {
+			background-image: url(https://thekadeshi.com/logo.svg);
+			width: 100%;
+			height: 90px;
+			background-repeat: no-repeat;
+			background-position: center;
+			position: relative;
+			background-size: contain;
+		}
+
+		.follow-caption {
+			font-size: 2.2rem;
+		}
+
+		.footer-icons {
+			font-size: 40px;
+
+		}
+
+		.footer-icons a {
+			color: #7d8186;
+		}
+
+		.footer-icons a:hover {
+			text-decoration: none;
+			color: #fff;
+		}
+	</style>
+</head>
+<body ng-controller="ReportListController">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+					  aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#" title="theKadeshi report">theKadeshi</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="#report">Report</a></li>
+				<li><a href="https://thekadeshi.com/en/" target="_blank" title="theKadeshi website">Website</a></li>
+				<li><a href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank"
+						 title="Download latest version">Download</a></li>
+				<li><a href="https://thekadeshi.com/en/contacts/" target="_blank" title="Contacts">Contact</a></li>
+			</ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</nav>
+<div id="main" class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<h1>theKadeshi scan report</h1>
+			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
+				Delete it after your job done.</p>
+		</div>
+	</div>
+	<div class="row" id="report">
+		<div class="col-xs-12" ng-if="scanResult.length == 0">
+			<h4>Nothing is found</h4>
+			<p>Looks like your site is clean.</p>
+			<p>Please consider repeat scan with new version of scanner. You can download it in our repository: <a
+				href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank" title="Download theKadeshi">theKadeshi</a>
+			</p>
+		</div>
+		<div class="col-xs-12" ng-if="scanResult.length > 0">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th>#</th>
+					<th>File</th>
+					<th>Infection</th>
+					<th>Action</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="file in scanResult">
+					<td>{{ $index }}</td>
+					<td>{{ file.path }}
+						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}, len {{file.cure.length}}
+							symbols
+						</small>
+						<br/>
+						<small class="text-muted hidden-md hidden-sm hidden-xs">{{ decoder(file.cure.sample) }}</small>
+					</td>
+					<td class="title" data-code="{{titleConverter(file.title)}}"
+						 ng-click="openSignature(titleConverter(file.title))">{{ file.title }}
+					</td>
+					<td class="action"><span
+						ng-class="{'text-success' : file.action === 'cure','text-warning':file.action=='delete'}">{{ file.action }}</span>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
+				Delete it after your job done.</p>
+		</div>
+	</div>
+</div>
+<footer class="container-fluid">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2 col-md-2 col-sm-2 hidden-xs">
+				<div class="bottom-logo" title="theKadeshi"></div>
+			</div>
+			<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+				<div class="row">
+					<div class="col-xs-12 follow-caption">Follow us</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 footer-icons">
+						<a href="https://www.facebook.com/Kadeshi/" name="Facebook" title="theKadeshi in Facebook"
+							target="_blank">
+							<i class="fa fa-facebook-official" aria-hidden="true"></i>
+						</a>
+						<a href="https://vk.com/thekadeshi" name="VKontakte" title="theKadeshi VKontakte" target="_blank">
+							<i class="fa fa-vk" aria-hidden="true"></i>
+						</a>
+						<a href="https://twitter.com/the_Kadeshi" name="Twitter" title="theKadeshi in Twitter"
+							target="_blank">
+							<i class="fa fa-twitter" aria-hidden="true"></i>
+						</a>
+						<a href="https://plus.google.com/117846074805969241764" name="Google+" title="theKadeshi in Google+"
+							target="_blank">
+							<i class="fa fa-google-plus-official" aria-hidden="true"></i>
+						</a>
+						<a href="https://www.linkedin.com/company/thekadeshi/" name="LinkedIn"
+							title="theKadeshi in LinkedIn" target="_blank">
+							<i class="fa fa-linkedin" aria-hidden="true"></i>
+						</a>
+						<a href="https://github.com/theKadeshi" name="GitHub" title="theKadeshi in Github" target="_blank">
+							<i class="fa fa-github" aria-hidden="true"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				&copy; 2016 - {{currentYear}} theKadeshi. All rights reserved.
+			</div>
+		</div>
+	</div>
+</footer>
+<script>
+	kadeshiReportApp = angular.module('kadeshiReportApp', []);
+	var scanResult = {Result_Json};
+	kadeshiReportApp.controller('ReportListController', function ReportListController($scope) {
+		var date = new Date();
+		$scope.scanResult = scanResult;
+		$scope.theKadeshiUrl = 'https://thekadeshi.com';
+		$scope.currentYear = date.getFullYear();
+
+		$scope.decoder = function (value) {
+			return window.atob(value);
+		};
+
+		$scope.titleConverter = function (value) {
+			return value.toLowerCase().replace(/\./g, '-');
+		};
+
+		$scope.openSignature = function (value) {
+			var currentSignatureCode = value.trim();
+			var signatureUrl = this.theKadeshiUrl + '/en/signatures/' + currentSignatureCode + '/';
+			var win = window.open(signatureUrl, '_blank');
+			win.focus();
+			console.log(signatureUrl);
+		}
+	});
+</script>
+</body>
+</html>

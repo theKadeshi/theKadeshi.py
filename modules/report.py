@@ -1,5 +1,10 @@
 import time
 import json
+import os
+
+import sys
+from datetime import datetime
+
 import modules.colors as cls
 
 
@@ -27,24 +32,34 @@ class Report:
             'result': {
                 'value': element['result'],
                 'message': str(element['result_message'])
+            },
+            'cure': {
+                'start': element['cure']['start'],
+                'end': element['cure']['end'],
+                'length': element['cure']['length'],
+                'sample': element['cure']['sample'],
             }
         })
-        
-        # print(self.report_list)
-        pass
     
-    def write_file(self):
+    def write_file(self, report_path):
         """
         Temporary function
 
+        :param report_path:
         :todo: fixme
         :param element:
         :return:
         """
+        report_filename = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
+        report_file = os.path.join(report_path, report_filename)
         
-        file = open("testfile.json", "w")
+        file = open(report_file, "w")
         
-        file.write(json.dumps(self.report_list))
+        report_template = self.load_template()
+        
+        rendered_template = report_template.replace('{Result_Json}', json.dumps(self.report_list))
+        
+        file.write(rendered_template)
         
         file.close()
         
@@ -73,3 +88,19 @@ class Report:
                 action_color + elem['action'] + cls.C_DEFAULT,
                 cls.C_RED + error_string + cls.C_DEFAULT
             ))
+    
+    @staticmethod
+    def load_template():
+        if getattr(sys, 'frozen', False):
+            current_folder = os.path.dirname(sys.executable)
+            template_path = 'report.html'
+        else:
+            current_folder = os.path.dirname(__file__)
+            template_path = '../files/report.html'
+        
+        total_path = os.path.join(current_folder, template_path)
+        
+        with open(total_path, "r") as report_template:
+            data = report_template.read()
+        
+        return data
