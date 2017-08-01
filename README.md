@@ -22,9 +22,10 @@ Options are:
 
 * `-h`  - Help
 * `-v`  - Version
-* `-bw` - Disable color output. Enabled by default. Try this option if you see something like this: `...php (?[32mClean?[39m)...`
-* `-nh` - Disable heuristic detection . Enabled by default
-* `-nc` - Disable cleanup mode . Enabled by default
+* `-bw` - Disables color output. Enabled by default. Try this option if you see something like this: `...php (?[32mClean?[39m)...`
+* `-nh` - Disables heuristic detection. Enabled by default
+* `-nc` - Disables cleanup mode. Enabled by default
+* `-nr` - Disables report file. Enabled by default
 
 #### Requirements ####
 * Python 3.6+

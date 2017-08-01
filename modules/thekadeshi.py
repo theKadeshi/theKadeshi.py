@@ -46,6 +46,7 @@ class TheKadeshi:
         self.no_color: bool = arguments.no_color
         self.no_heuristic: bool = arguments.no_heuristic
         self.no_cure: bool = arguments.no_cure
+        self.no_report: bool = arguments.no_report
     
     def get_files_list(self):
         """
@@ -297,5 +298,6 @@ class TheKadeshi:
             
             rpt.append(cure_result)
         
-        rpt.write_file(self.site_folder)
+        if not self.no_report:
+            rpt.write_file(self.site_folder)
         rpt.output()

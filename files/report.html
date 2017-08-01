@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xml:lang="ru" lang="ru" ng-app="kadeshiReportApp">
-<head itemscope itemtype="http://schema.org/WebSite">
+<html xml:lang="en" lang="en" ng-app="kadeshiReportApp">
+<head>
 	<meta name="viewport" content="width=device-width, maximum-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<title itemprop="name" content="theKadeshi">theKadeshi scan report</title>
+	<title>theKadeshi scan report</title>
 	<link rel="shortcut icon" type="image/x-icon" href="https://thekadeshi.com/favicon.ico"/>
 	<link rel="apple-touch-icon" sizes="180x180" href="https://thekadeshi.com/icons/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="https://thekadeshi.com/icons/favicon-32x32.png">
@@ -139,7 +139,7 @@
 		<div class="col-xs-12" ng-if="scanResult.length == 0">
 			<h4>Nothing is found</h4>
 			<p>Looks like your site is clean.</p>
-			<p>Please consider repeat scan with new version of scanner. You can download it in our repository: <a
+			<p>Please consider to repeat scan with a new version of the scanner. You can download it in our repository: <a
 				href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank" title="Download theKadeshi">theKadeshi</a>
 			</p>
 		</div>
@@ -228,6 +228,7 @@
 </footer>
 <script>
 	kadeshiReportApp = angular.module('kadeshiReportApp', []);
+	// noinspection JSAnnotator
 	var scanResult = {Result_Json};
 	kadeshiReportApp.controller('ReportListController', function ReportListController($scope) {
 		var date = new Date();

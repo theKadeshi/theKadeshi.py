@@ -1,10 +1,10 @@
 import time
 import json
 import os
-
 import sys
 from datetime import datetime
 
+import modules.filesystem as f_system
 import modules.colors as cls
 
 
@@ -50,20 +50,16 @@ class Report:
         :param element:
         :return:
         """
-        report_filename = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
-        report_file = os.path.join(report_path, report_filename)
-        
-        file = open(report_file, "w")
+        report_filename: str = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
+        report_file: str = os.path.join(report_path, report_filename)
         
         report_template = self.load_template()
         
-        rendered_template = report_template.replace('{Result_Json}', json.dumps(self.report_list))
+        rendered_template = report_template.replace(b'{Result_Json}', bytes(json.dumps(self.report_list), 'utf-8'))
         
-        file.write(rendered_template)
+        fs = f_system.FileSystem()
         
-        file.close()
-        
-        # print(json.dumps(self.report_list))
+        fs.put_file_content(report_file, bytes(rendered_template))
     
     def output(self):
         """
@@ -91,6 +87,11 @@ class Report:
     
     @staticmethod
     def load_template():
+        """
+        Функция загрузки шаблона отчета
+        
+        :return:
+        """
         if getattr(sys, 'frozen', False):
             current_folder = os.path.dirname(sys.executable)
             template_path = 'report.html'
@@ -98,9 +99,10 @@ class Report:
             current_folder = os.path.dirname(__file__)
             template_path = '../files/report.html'
         
+        fs = f_system.FileSystem()
+        
         total_path = os.path.join(current_folder, template_path)
         
-        with open(total_path, "r") as report_template:
-            data = report_template.read()
+        data = fs.get_file_content(total_path)
         
         return data
