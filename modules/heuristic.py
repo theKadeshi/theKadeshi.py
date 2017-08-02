@@ -1,6 +1,7 @@
 import math
 import re
 
+
 class IHeuristicCheckResult:
     """
     Empty check result structure
@@ -60,10 +61,10 @@ class Heuristic:
         :return:
         :rtype: IHeuristicCheckResult
         """
-        result: IHeuristicCheckResult = self.validate_forbidden_functions(file_content)
+        result = self.validate_long_words(file_content)
         
         if not result.result:
-            result = self.validate_long_words(file_content)
+            result: IHeuristicCheckResult = self.validate_forbidden_functions(file_content)
         
         return result
     
@@ -136,7 +137,11 @@ class Heuristic:
                 check_result.detected = func
                 break
             else:
-                function_position: int = file_content.find(self.convert_string_to_hex(func))
+                file_content = self.convert_char_to_string(file_content)
+                file_content = self.convert_hex_to_string(file_content)
+                
+                # function_position: int = file_content.find(self.convert_string_to_hex(func))
+                function_position: int = file_content.find(func)
                 if function_position != -1:
                     check_result.result = True
                     check_result.position = function_position
@@ -144,12 +149,61 @@ class Heuristic:
                     break
         
         return check_result
-
-    def convert_string_to_hex(self, function_string: str):
+    
+    @staticmethod
+    def convert_string_to_hex(function_string: str):
+        """
+        Temporary unused function
         
+        :param function_string:
+        :return:
+        """
         result: str = ""
         for char in str.encode(function_string, 'ascii'):
             # print (char)
             result += "\\\\x" + str(hex(char)).replace("0x", "")
-            
+        
         return result
+    
+    @staticmethod
+    def convert_char_to_string(content: str):
+        char_reges = [
+            re.compile(r"([\"']{0,}\s{0,}\.{0,1}\s{0,}chr\s{0,}\(\s{0,}(\d{1,3})\s{0,}\)\s{0,}\.{0,}\s{0,}[\"']{0,})",
+                       re.IGNORECASE),
+            # re.compile(r"([\"']?\s?\.?\s?chr\s?\(\s{0,}([0-9]{2,3})\s?\)\s?\.?\s?[\"']?)", re.IGNORECASE),
+            # todo проверить на произаодительность
+            # re.compile(r"(chr\s{0,}\(\s{0,}(\d{1,3})\s{0,}\)\s{0,}\.\s{0,}[\"'])", re.IGNORECASE),
+            # re.compile(r"(\s{0,}chr\s{0,}\(\s{0,}(\d{1,3})\s{0,}\)\s{0,})", re.IGNORECASE),
+        ]
+        empty_key_array = []
+        for char_reg in char_reges:
+            # compiled_regex = re.compile(char_reg, re.IGNORECASE)
+            result = re.findall(char_reg, content)
+            if result:
+                for result_element in result:
+                    found_char_value = result_element[0]
+                    if found_char_value not in empty_key_array:
+                        new_char = chr(int(result_element[1]))
+                        content = content.replace(found_char_value, new_char)
+                        
+                        empty_key_array.append(found_char_value)
+        
+        return content
+    
+    @staticmethod
+    def convert_hex_to_string(content: str):
+        char_reg = r"(\\x([a-h0-9]{2}))"
+        compiled_regex = re.compile(char_reg, re.IGNORECASE)
+        result = re.findall(compiled_regex, content)
+        empty_key_array = []
+        if result:
+            # print(result)
+            for result_element in result:
+                found_char_value = result_element[0]
+                if found_char_value not in empty_key_array:
+                    new_char = chr(int(result_element[1], 16))
+                    content = content.replace(found_char_value, new_char)
+                    
+                    empty_key_array.append(found_char_value)
+        
+        return content
