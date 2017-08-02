@@ -168,12 +168,7 @@ class Heuristic:
     @staticmethod
     def convert_char_to_string(content: str):
         char_reges = [
-            re.compile(r"([\"']{0,}\s{0,}\.{0,1}\s{0,}chr\s{0,}\(\s{0,}(\d{1,3})\s{0,}\)\s{0,}\.{0,}\s{0,}[\"']{0,})",
-                       re.IGNORECASE),
-            # re.compile(r"([\"']?\s?\.?\s?chr\s?\(\s{0,}([0-9]{2,3})\s?\)\s?\.?\s?[\"']?)", re.IGNORECASE),
-            # todo проверить на произаодительность
-            # re.compile(r"(chr\s{0,}\(\s{0,}(\d{1,3})\s{0,}\)\s{0,}\.\s{0,}[\"'])", re.IGNORECASE),
-            # re.compile(r"(\s{0,}chr\s{0,}\(\s{0,}(\d{1,3})\s{0,}\)\s{0,})", re.IGNORECASE),
+            re.compile(r"([\"']?\s?\.?\s?chr\(([0-9]{2,3})\)\s?\.?\s?[\"']?)", re.IGNORECASE),
         ]
         empty_key_array = []
         for char_reg in char_reges:

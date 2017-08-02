@@ -97,7 +97,8 @@ class TheKadeshi:
         
         heuristic = h_mod.Heuristic()
         # Берем файл из списка
-        for file_item in self.files_list:
+        local_files_list = self.files_list
+        for file_item in local_files_list:
             anamnesis_element: list = []
             current_progress = (total_scanned + file_item['size']) * 100 / self.total_files_size
             
@@ -129,8 +130,8 @@ class TheKadeshi:
                         # Хеш сумма файла
                         file_hash: str = hashlib.sha256(content).hexdigest()
                         
-                        # if len(self.signatures_database['h']) > 0:
-                        for signature in self.signatures_database['h']:
+                        local_sugnatures = self.signatures_database['h']
+                        for signature in local_sugnatures:
                             if file_hash == signature['expression']:
                                 
                                 is_file_clean = False
@@ -164,7 +165,8 @@ class TheKadeshi:
                     except UnicodeDecodeError:
                         string_content = content.decode('latin-1')
                     
-                    for signature in self.signatures_database['r']:
+                    local_sugnatures = self.signatures_database['r']
+                    for signature in local_sugnatures:
                         matches = re.search(signature['expression'], string_content)
                         if matches is not None:
                             is_file_clean = False
@@ -191,7 +193,7 @@ class TheKadeshi:
                 scan_speed = total_scanned // time_delta // 1024
             scanner_counter = scanner_counter + 1
             
-            file_message: str = cls.C_GREEN + "Clean" + cls.C_DEFAULT
+            file_message: str = ''.join(cls.C_GREEN + "Clean" + cls.C_DEFAULT)
             if self.no_color:
                 file_message = "Clean"
             
