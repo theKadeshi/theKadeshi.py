@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import modules.thekadeshi as the_kadeshi
+from _version import __version__
 
 if __name__ == "__main__":
     print("Ready")
@@ -32,7 +33,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Disables report file. Enabled by default"
     )
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.1.11')
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     
     args = parser.parse_args()
     

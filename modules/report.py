@@ -2,10 +2,10 @@ import time
 import json
 import os
 import sys
-from datetime import datetime
-
 import modules.filesystem as f_system
 import modules.colors as cls
+from datetime import datetime
+from _version import __version__
 
 
 class Report:
@@ -56,6 +56,7 @@ class Report:
         report_template = self.load_template()
         
         rendered_template = report_template.replace(b'{Result_Json}', bytes(json.dumps(self.report_list), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Application_Version}', bytes(__version__, 'utf-8'))
         
         fs = f_system.FileSystem()
         

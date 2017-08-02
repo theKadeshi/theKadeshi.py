@@ -1,4 +1,4 @@
 import os
 
-# Корень проекта
+# Project root folder
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
