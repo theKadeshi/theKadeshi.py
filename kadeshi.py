@@ -19,11 +19,6 @@ if __name__ == "__main__":
         help="Disables color output. Enabled by default"
     )
     parser.add_argument(
-        "-nh", "--no-heuristic",
-        action="store_true",
-        help="Disables heuristic detection. Check all files. Enabled by default"
-    )
-    parser.add_argument(
         "-dc", "--no-cure",
         action="store_true",
         help="Disables malware cleanup. Enabled by default"
@@ -44,7 +39,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     kdsh = the_kadeshi.TheKadeshi(args)
+    
     kdsh.get_files_list()
+    
     print("Found", len(kdsh.files_list), "files, ~", kdsh.total_files_size, "bytes")
     
     kdsh.load_signatures()

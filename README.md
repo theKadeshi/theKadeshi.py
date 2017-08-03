@@ -23,7 +23,6 @@ Options are:
 * `-h`  - Help
 * `-v`  - Version
 * `-bw` - Disables color output. Enabled by default. Try this option if you see something like this: `...php (?[32mClean?[39m)...`
-* `-nh` - Disables heuristic detection. Enabled by default
 * `-nc` - Disables cleanup mode. Enabled by default
 * `-nr` - Disables report file. Enabled by default
 

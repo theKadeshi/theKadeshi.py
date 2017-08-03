@@ -21,7 +21,7 @@ class Database:
         Constructor
         """
         
-        prefix_folders: list = ["./", "./database/", "../"]
+        prefix_folders = ["./", "./database/", "../"]
         
         database_present: bool = False
         
