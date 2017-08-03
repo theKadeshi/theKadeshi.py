@@ -47,6 +47,7 @@ class TheKadeshi:
         self.no_heuristic: bool = arguments.no_heuristic
         self.no_cure: bool = arguments.no_cure
         self.no_report: bool = arguments.no_report
+        self.debug_mode: bool = (arguments.debug == 1)
     
     def get_files_list(self):
         """
@@ -95,7 +96,10 @@ class TheKadeshi:
         # Счетчик проверенных файлов
         scanner_counter: int = 0
         
+        signatures_statistic = {}
+        
         heuristic = h_mod.Heuristic()
+        
         # Берем файл из списка
         local_files_list = self.files_list
         for file_item in local_files_list:
@@ -132,6 +136,7 @@ class TheKadeshi:
                         
                         local_sugnatures = self.signatures_database['h']
                         for signature in local_sugnatures:
+                            
                             if file_hash == signature['expression']:
                                 
                                 is_file_clean = False
@@ -167,7 +172,15 @@ class TheKadeshi:
                     
                     local_sugnatures = self.signatures_database['r']
                     for signature in local_sugnatures:
+                        signature_time_start = time.time()
                         matches = re.search(signature['expression'], string_content)
+                        signature_time_end = time.time()
+                        if self.debug_mode:
+                            signatures_time_delta = signature_time_end - signature_time_start
+                            if not signature['id'] in signatures_statistic:
+                                signatures_statistic[signature['id']] = 0
+                            old_value = signatures_statistic[signature['id']]
+                            signatures_statistic[signature['id']] = old_value + signatures_time_delta
                         if matches is not None:
                             is_file_clean = False
                             start_position = matches.span()[0]
@@ -224,6 +237,12 @@ class TheKadeshi:
             # print(len(anamnesis_element))
             if len(anamnesis_element) > 0:
                 self.anamnesis_list.append(anamnesis_element)
+        
+        if self.debug_mode:
+            a1_sorted_keys = sorted(signatures_statistic, key=signatures_statistic.get, reverse=True)
+            for r in a1_sorted_keys:
+                print(r, signatures_statistic[r])
+            print(signatures_statistic)
     
     def cure(self):
         """

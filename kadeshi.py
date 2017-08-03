@@ -33,6 +33,12 @@ if __name__ == "__main__":
         action="store_true",
         help="Disables report file. Enabled by default"
     )
+    parser.add_argument(
+        "-d", "--debug",
+        action="count",
+        default=0,
+        help="Enables debug mode. Disabled by default"
+    )
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     
     args = parser.parse_args()

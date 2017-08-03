@@ -75,7 +75,7 @@ class Report:
             action_color = cls.C_GREEN
             error_string = ""
             if elem['action'] == 'delete':
-                action_color = cls.C_MAGENTA
+                action_color = cls.C_BLUE
             if elem['result']['value'] == 'false':
                 error_string = 'Error'
             
