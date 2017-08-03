@@ -85,9 +85,9 @@ class Database:
             
             cursor = self.conn.cursor()
             cursor.execute("""
-                SELECT title, expression, flags, action, type, id
+                SELECT title, expression, flags, action, type, id, popularity
                 FROM signatures_regexp
-                WHERE status = 1 ORDER BY action DESC, popularity DESC""")
+                WHERE status = 1 ORDER BY popularity DESC, action DESC""")
             results = cursor.fetchall()
             
             for result in results:

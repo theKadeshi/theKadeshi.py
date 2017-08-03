@@ -168,6 +168,7 @@ class TheKadeshi:
                 local_signatures = self.signatures_database['r']
                 for signature in local_signatures:
                     signature_time_start = time.time()
+                    # print("now shall scan:", signature['id'])
                     matches = re.search(signature['expression'], string_content)
                     signature_time_end = time.time()
                     
@@ -177,7 +178,7 @@ class TheKadeshi:
                             signatures_statistic[signature['id']] = 0
                         old_value = signatures_statistic[signature['id']]
                         signatures_statistic[signature['id']] = old_value + signatures_time_delta
-                        
+                    
                     if matches is not None:
                         is_file_clean = False
                         start_position = matches.span()[0]
@@ -198,7 +199,7 @@ class TheKadeshi:
             current_time = time.time()
             time_delta = current_time - timer_start
             if time_delta != 0:
-                scan_speed = total_scanned // time_delta // 1024
+                scan_speed = total_scanned / time_delta / 1024
             scanner_counter = scanner_counter + 1
             
             file_message: str = ''.join(cls.C_GREEN + "Clean" + cls.C_DEFAULT)
@@ -215,9 +216,10 @@ class TheKadeshi:
                         
                         if self.no_color:
                             file_message = "Infected: " + anamnesis_element['title']
-            
-            print('[{0:.2f}% | {1!s}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, file_item['path'],
-                                                                file_message, sep=" ", end="", flush=True))
+
+            short_file_path: str = file_item['path'][len(self.site_folder)::]
+            print('[{0:.2f}% | {1:.1f}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, short_file_path,
+                                                                  file_message, sep=" ", end="", flush=True))
             
             # print(len(anamnesis_element))
             if len(anamnesis_element) > 0:
@@ -227,7 +229,7 @@ class TheKadeshi:
             a1_sorted_keys = sorted(signatures_statistic, key=signatures_statistic.get, reverse=False)
             for r in a1_sorted_keys:
                 print(r, signatures_statistic[r])
-            # print(signatures_statistic)
+                # print(signatures_statistic)
     
     def cure(self):
         """
