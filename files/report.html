@@ -157,8 +157,8 @@
 				<tr ng-repeat="file in scanResult">
 					<td>{{ $index }}</td>
 					<td>{{ file.path }}
-						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}, len {{file.cure.length}}
-							symbols
+						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}<span class="signature-length" ng-if="file.cure.length != 0">, len {{file.cure.length}}
+							symbols</span>
 						</small>
 						<br/>
 						<small class="text-muted hidden-md hidden-sm hidden-xs">{{ decoder(file.cure.sample) }}</small>
@@ -237,7 +237,8 @@
 		$scope.currentYear = date.getFullYear();
 
 		$scope.decoder = function (value) {
-			return window.atob(value);
+			var scriptValue = window.atob(value);
+			return scriptValue.replace(/\s{2,}/g, ' ');
 		};
 
 		$scope.titleConverter = function (value) {

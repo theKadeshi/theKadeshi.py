@@ -18,7 +18,7 @@ class TheKadeshi:
     """
     
     # Список расширений, которые будут сканироваться
-    permitted_extensions = (".php", ".js", ".htm", ".html", "pl", "py", "suspected")
+    permitted_extensions = (".php", ".js", ".htm", ".html", "pl", "py", "suspected", "ico")
     
     # Список зараженных файлов
     anamnesis_list: list = []
@@ -285,7 +285,7 @@ class TheKadeshi:
                     cure_result['cure']['end'] = slice_end
                     cure_result['cure']['length'] = slice_end - slice_start
                     
-                    sample_slice = file_content[sample_start: slice_start + 80]
+                    sample_slice = file_content[sample_start: slice_start + 120]
                     cure_result['cure']['sample'] = str(base64.b64encode(sample_slice), 'ascii')
                     result = fs.put_file_content(element['path'], first_part + second_part)
                     cure_result['result'] = 'false'
