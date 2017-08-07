@@ -22,7 +22,7 @@ setup(
     license='MIT',
     author='theKadeshi',
     author_email='info@thekadeshi.com',
-    description='Antimalware for your site',
+    description='Antivirus for your site',
     options=dict(build_exe=buildOptions),
     executables=[Executable(script="kadeshi.py", icon="icon.ico")]
 )
