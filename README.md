@@ -1,6 +1,6 @@
 # theKadeshi #
 ### Antivirus for your web-site ###
-[![Code Issues](https://www.quantifiedcode.com/api/v1/project/40bbe4ed3bdf46af9107edcea02e9d22/badge.svg)](https://www.quantifiedcode.com/app/project/40bbe4ed3bdf46af9107edcea02e9d22)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd626f73d9c746bc960b1b085c163473)](https://www.codacy.com/app/ntorgov/theKadeshi.py?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ntorgov/theKadeshi.py&amp;utm_campaign=Badge_Grade)
 
 [TOC]
 
