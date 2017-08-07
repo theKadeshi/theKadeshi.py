@@ -85,7 +85,7 @@ class Database:
             
             cursor = self.conn.cursor()
             cursor.execute("""
-                SELECT title, expression, flags, action, type, id, popularity
+                SELECT title, expression, flags, action, type, id, min_size, max_size
                 FROM signatures_regexp
                 WHERE status = 1 ORDER BY popularity DESC, action DESC""")
             results = cursor.fetchall()
@@ -104,6 +104,8 @@ class Database:
                     'id': result[5],
                     'title': "KDSH." + result[4].upper() + "." + result[0],
                     'expression': re.compile(result[1], flag),
+                    'min_size': result[6],
+                    'max_size': result[7],
                     'flag': result[2],
                     'action': result[3]
                 })

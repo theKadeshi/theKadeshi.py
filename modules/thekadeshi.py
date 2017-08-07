@@ -167,33 +167,47 @@ class TheKadeshi:
                 
                 local_signatures = self.signatures_database['r']
                 for signature in local_signatures:
-                    signature_time_start = time.time()
-                    # print("now shall scan:", signature['id'])
-                    matches = re.search(signature['expression'], string_content)
-                    signature_time_end = time.time()
+                    is_signature_correct = True
+                    if signature['min_size'] is not None:
+                        if file_item['size'] < signature['min_size']:
+                            is_signature_correct = False
                     
-                    if self.debug_mode:
-                        signatures_time_delta = signature_time_end - signature_time_start
-                        if not signature['id'] in signatures_statistic:
-                            signatures_statistic[signature['id']] = 0
-                        old_value = signatures_statistic[signature['id']]
-                        signatures_statistic[signature['id']] = old_value + signatures_time_delta
+                    if signature['max_size'] is not None:
+                        if file_item['size'] > signature['max_size']:
+                            is_signature_correct = False
                     
-                    if matches is not None:
-                        is_file_clean = False
-                        start_position = matches.span()[0]
-                        end_position = matches.span()[1]
+                    if signature['min_size'] is not None and signature['max_size'] is not None:
+                        if signature['min_size'] > file_item['size'] > signature['max_size']:
+                            is_signature_correct = False
+                    
+                    if is_signature_correct:
+                        signature_time_start = time.time()
+                        # print("now shall scan:", signature['id'])
+                        matches = re.search(signature['expression'], string_content)
+                        signature_time_end = time.time()
                         
-                        anamnesis_element = {
-                            'id': signature['id'],
-                            'type': 'r',
-                            'path': file_item['path'],
-                            'title': signature['title'],
-                            'action': signature['action'],
-                            'cure': {'start': start_position, 'end': end_position}
-                        }
-                        # Прерываем цикл
-                        break
+                        if self.debug_mode:
+                            signatures_time_delta = signature_time_end - signature_time_start
+                            if not signature['id'] in signatures_statistic:
+                                signatures_statistic[signature['id']] = 0
+                            old_value = signatures_statistic[signature['id']]
+                            signatures_statistic[signature['id']] = old_value + signatures_time_delta
+                        
+                        if matches is not None:
+                            is_file_clean = False
+                            start_position = matches.span()[0]
+                            end_position = matches.span()[1]
+                            
+                            anamnesis_element = {
+                                'id': signature['id'],
+                                'type': 'r',
+                                'path': file_item['path'],
+                                'title': signature['title'],
+                                'action': signature['action'],
+                                'cure': {'start': start_position, 'end': end_position}
+                            }
+                            # Прерываем цикл
+                            break
             
             total_scanned = total_scanned + file_item['size']
             current_time = time.time()
@@ -216,7 +230,7 @@ class TheKadeshi:
                         
                         if self.no_color:
                             file_message = "Infected: " + anamnesis_element['title']
-
+            
             short_file_path: str = file_item['path'][len(self.site_folder)::]
             print('[{0:.2f}% | {1:.1f}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, short_file_path,
                                                                   file_message, sep=" ", end="", flush=True))
