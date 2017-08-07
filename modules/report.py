@@ -1,6 +1,11 @@
 import time
 import json
+import os
+import sys
+import modules.filesystem as f_system
 import modules.colors as cls
+from datetime import datetime
+from _version import __version__
 
 
 class Report:
@@ -27,28 +32,35 @@ class Report:
             'result': {
                 'value': element['result'],
                 'message': str(element['result_message'])
+            },
+            'cure': {
+                'start': element['cure']['start'],
+                'end': element['cure']['end'],
+                'length': element['cure']['length'],
+                'sample': element['cure']['sample'],
             }
         })
-        
-        # print(self.report_list)
-        pass
     
-    def write_file(self):
+    def write_file(self, report_path):
         """
         Temporary function
 
+        :param report_path:
         :todo: fixme
         :param element:
         :return:
         """
+        report_filename: str = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
+        report_file: str = os.path.join(report_path, report_filename)
         
-        file = open("testfile.json", "w")
+        report_template = self.load_template()
         
-        file.write(json.dumps(self.report_list))
+        rendered_template = report_template.replace(b'{Result_Json}', bytes(json.dumps(self.report_list), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Application_Version}', bytes(__version__, 'utf-8'))
         
-        file.close()
+        fs = f_system.FileSystem()
         
-        # print(json.dumps(self.report_list))
+        fs.put_file_content(report_file, bytes(rendered_template))
     
     def output(self):
         """
@@ -63,7 +75,7 @@ class Report:
             action_color = cls.C_GREEN
             error_string = ""
             if elem['action'] == 'delete':
-                action_color = cls.C_MAGENTA
+                action_color = cls.C_BLUE
             if elem['result']['value'] == 'false':
                 error_string = 'Error'
             
@@ -73,3 +85,25 @@ class Report:
                 action_color + elem['action'] + cls.C_DEFAULT,
                 cls.C_RED + error_string + cls.C_DEFAULT
             ))
+    
+    @staticmethod
+    def load_template():
+        """
+        Функция загрузки шаблона отчета
+        
+        :return:
+        """
+        if getattr(sys, 'frozen', False):
+            current_folder = os.path.dirname(sys.executable)
+            template_path = 'report.html'
+        else:
+            current_folder = os.path.dirname(__file__)
+            template_path = '../files/report.html'
+        
+        fs = f_system.FileSystem()
+        
+        total_path = os.path.join(current_folder, template_path)
+        
+        data = fs.get_file_content(total_path)
+        
+        return data
