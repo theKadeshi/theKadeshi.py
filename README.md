@@ -2,8 +2,6 @@
 ### Antivirus for your web-site ###
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd626f73d9c746bc960b1b085c163473)](https://www.codacy.com/app/ntorgov/theKadeshi.py?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ntorgov/theKadeshi.py&amp;utm_campaign=Badge_Grade)
 
-[TOC]
-
 #### Usage ####
 Download latest version from release section: [Releases](https://github.com/theKadeshi/theKadeshi.py/releases)
 
