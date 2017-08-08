@@ -25,6 +25,7 @@ Options are:
 * `-bw` - Disables color output. Enabled by default. Try this option if you see something like this: `...php (?[32mClean?[39m)...`
 * `-nc` - Disables cleanup mode. Enabled by default
 * `-nr` - Disables report file. Enabled by default
+* `-d`  - Outputs some debug information
 
 #### Requirements ####
 * Python 3.6+
