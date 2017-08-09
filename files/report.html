@@ -11,8 +11,17 @@
 	<link rel="manifest" href="https://thekadeshi.com/icons/manifest.json">
 	<link rel="mask-icon" href="https://thekadeshi.com/icons/safari-pinned-tab.svg" color="#5bbad5">
 	<meta name="theme-color" content="#ffffff">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+			integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+			  integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+			  crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+			  integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+			  crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+			  integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+			  crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -104,25 +113,27 @@
 </head>
 <body ng-controller="ReportListController">
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
 	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-					  aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#" title="theKadeshi report">theKadeshi</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<li><a href="#report">Report</a></li>
-				<li><a href="https://thekadeshi.com/en/" target="_blank" title="theKadeshi website">Website</a></li>
-				<li><a href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank"
-						 title="Download latest version">Download</a></li>
-				<li><a href="https://thekadeshi.com/en/contacts/" target="_blank" title="Contacts">Contact</a></li>
+		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+				  data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+				  aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand" href="#" title="theKadeshi report">
+			<img src="https://thekadeshi.com/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+			theKadeshi</a>
+		<div id="navbar" class="collapse navbar-collapse">
+
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item"><a class="nav-link" href="#report">Report</a></li>
+				<li class="nav-item"><a class="nav-link" href="https://thekadeshi.com/en/" target="_blank"
+												title="theKadeshi website">Website</a></li>
+				<li class="nav-item"><a class="nav-link" href="https://github.com/theKadeshi/theKadeshi.py/releases"
+												target="_blank"
+												title="Download latest version">Download</a></li>
+				<li class="nav-item"><a class="nav-link" href="https://thekadeshi.com/en/contacts/" target="_blank"
+												title="Contacts">Contact</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->
 	</div>
@@ -130,7 +141,9 @@
 <div id="main" class="container">
 	<div class="row">
 		<div class="col-xs-12">
-			<h1>theKadeshi scan report <small>{Application_Version}</small></h1>
+			<h1>theKadeshi scan report
+				<small>{Application_Version}</small>
+			</h1>
 			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
 				Delete it after your job done.</p>
 		</div>
@@ -157,7 +170,8 @@
 				<tr ng-repeat="file in scanResult">
 					<td>{{ $index }}</td>
 					<td>{{ file.path }}
-						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}<span class="signature-length" ng-if="file.cure.length != 0">, len {{file.cure.length}}
+						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}<span
+							class="signature-length" ng-if="file.cure.length != 0">, len {{file.cure.length}}
 							symbols</span>
 						</small>
 						<br/>
