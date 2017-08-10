@@ -202,6 +202,7 @@ class TheKadeshi:
                                 'id': signature['id'],
                                 'type': 'r',
                                 'path': file_item['path'],
+                                'size': file_item['size'],
                                 'title': signature['title'],
                                 'action': signature['action'],
                                 'cure': {'start': start_position, 'end': end_position}
@@ -258,6 +259,7 @@ class TheKadeshi:
         for element in self.anamnesis_list:
             cure_result = {
                 'path': element['path'],
+                'size': element['size'],
                 'action': element['action'],
                 'title': element['title'],
                 'type': element['type'],
@@ -319,6 +321,9 @@ class TheKadeshi:
                     cure_result['result'] = 'disabled'
             
             rpt.append(cure_result)
+        
+        rpt.total_files_size = self.total_files_size
+        rpt.total_files_count = len(self.files_list)
         
         if not self.no_report:
             rpt.write_file(self.site_folder)

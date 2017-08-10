@@ -15,6 +15,10 @@ class Report:
     
     report_list = []
     
+    total_files_size: int = 0
+    
+    total_files_count: int = 0
+    
     def append(self, element):
         """
         Temporary function
@@ -57,7 +61,13 @@ class Report:
         
         rendered_template = report_template.replace(b'{Result_Json}', bytes(json.dumps(self.report_list), 'utf-8'))
         rendered_template = rendered_template.replace(b'{Application_Version}', bytes(__version__, 'utf-8'))
-        
+        rendered_template = rendered_template.replace(b'{Result_Total_Files_Size}',
+                                                      bytes(str(self.total_files_size), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Result_Total_Files_Count}',
+                                                      bytes(str(self.total_files_count), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Result_Scan_Date}',
+                                                      bytes(datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+                                                            'utf-8'))
         fs = f_system.FileSystem()
         
         fs.put_file_content(report_file, bytes(rendered_template))
