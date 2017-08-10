@@ -1,6 +1,11 @@
+"""
+Simple file operations
+"""
+
+
 class FileSystem:
     """
-    Filesystem class
+    Simple file operations
     """
     
     # @staticmethod

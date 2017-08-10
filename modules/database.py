@@ -22,9 +22,7 @@ class Database:
         """
         
         prefix_folders = ["./", "./database/", "../"]
-        
         database_present: bool = False
-        
         for prefix_folder in prefix_folders:
             current_base_path: str = os.path.join(ROOT_DIR, prefix_folder + "thekadeshi.db")
             if os.path.isfile(current_base_path):

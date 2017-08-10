@@ -9,25 +9,21 @@ import modules.colors as cls
 import modules.filesystem as fsys
 
 
-# import modules.heuristic as h_mod
-
-
 class TheKadeshi:
     """
     Основной класс
     """
-    
-    # Список расширений, которые будут сканироваться
     permitted_extensions = (".php", ".js", ".htm", ".html", "pl", "py", "suspected", "ico")
+    """ Список расширений, которые будут сканироваться """
     
-    # Список зараженных файлов
     anamnesis_list: list = []
+    """ Список зараженных файлов """
     
-    # Список файлов для сканирования
     files_list: list = []
+    """ Список файлов для сканирования """
     
-    # Суммарный размер файлов в байтах
     total_files_size: int = 0
+    """ Суммарный размер файлов в байтах """
     
     # База сигнатур
     signatures_database = {'h': [], 'r': []}
@@ -56,7 +52,7 @@ class TheKadeshi:
         :return: Ничего, просто заполняет список файлов
         """
         
-        for root, dirs, files in os.walk(self.site_folder):
+        for root, _, files in os.walk(self.site_folder):
             for name in files:
                 if name.endswith(self.permitted_extensions):
                     file_path: str = os.path.join(root, name)
@@ -76,7 +72,9 @@ class TheKadeshi:
         self.signatures_database['h'] = db.get_hash_signatures()
         self.signatures_database['r'] = db.get_regexp_signatures()
         
-        if len(self.signatures_database['h']) == 0 and len(self.signatures_database['h']) == 0:
+        hash_signatures_count = len(self.signatures_database['h'])
+        regular_signatures_count = len(self.signatures_database['r'])
+        if hash_signatures_count == 0 and regular_signatures_count == 0:
             self.database_present = False
     
     def scan_files(self):
@@ -233,8 +231,13 @@ class TheKadeshi:
                             file_message = "Infected: " + anamnesis_element['title']
             
             short_file_path: str = file_item['path'][len(self.site_folder)::]
-            print('[{0:.2f}% | {1:.1f}kB/s] {2!s} ({3!s})'.format(current_progress, scan_speed, short_file_path,
-                                                                  file_message, sep=" ", end="", flush=True))
+            print('[{0:.2f}% | {1:.1f}kB/s] {2!s} ({3!s})'.format(current_progress,
+                                                                  scan_speed,
+                                                                  short_file_path,
+                                                                  file_message,
+                                                                  sep=" ",
+                                                                  end="",
+                                                                  flush=True))
             
             # print(len(anamnesis_element))
             if len(anamnesis_element) > 0:
@@ -244,7 +247,6 @@ class TheKadeshi:
             a1_sorted_keys = sorted(signatures_statistic, key=signatures_statistic.get, reverse=False)
             for r in a1_sorted_keys:
                 print(r, signatures_statistic[r])
-                # print(signatures_statistic)
     
     def cure(self):
         """
