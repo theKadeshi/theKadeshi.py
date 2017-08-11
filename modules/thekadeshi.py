@@ -1,3 +1,6 @@
+"""
+Module theKadesi
+"""
 import base64
 import os
 import hashlib
@@ -6,30 +9,28 @@ import re
 import modules.database as dbase
 import modules.report as report
 import modules.colors as cls
-import modules.filesystem as fsys
+import modules.filesystem as f_system
 
 
 class TheKadeshi:
     """
     Основной класс
     """
+
+    # List of active extensions
     permitted_extensions = (".php", ".js", ".htm", ".html", "pl", "py", "suspected", "ico")
-    """ Список расширений, которые будут сканироваться """
 
+    # List of infected files
     anamnesis_list: list = []
-    """ Список зараженных файлов """
 
+    # List of files
     files_list: list = []
-    """ Список файлов для сканирования """
 
+    # Total files size in bytes
     total_files_size: int = 0
-    """ Суммарный размер файлов в байтах """
 
     # База сигнатур
     signatures_database = {'h': [], 'r': []}
-
-    # No database. Heuristic scan only
-    database_present: bool = True
 
     def __init__(self, arguments):
         """
@@ -68,14 +69,9 @@ class TheKadeshi:
         Функция загрузки сигнатур
         """
 
-        db = dbase.Database()
-        self.signatures_database['h'] = db.get_hash_signatures()
-        self.signatures_database['r'] = db.get_regexp_signatures()
-
-        hash_signatures_count = len(self.signatures_database['h'])
-        regular_signatures_count = len(self.signatures_database['r'])
-        if hash_signatures_count == 0 and regular_signatures_count == 0:
-            self.database_present = False
+        database = dbase.Database()
+        self.signatures_database['h'] = database.get_hash_signatures()
+        self.signatures_database['r'] = database.get_regexp_signatures()
 
     def scan_files(self):
         """
@@ -98,7 +94,10 @@ class TheKadeshi:
 
         signatures_statistic = {}
 
-        # heuristic = h_mod.Heuristic()
+        file_system = f_system.FileSystem()
+
+        local_hash_signatures = self.signatures_database['h']
+        local_regex_signatures = self.signatures_database['r']
 
         # Берем файл из списка
         local_files_list = self.files_list
@@ -113,49 +112,38 @@ class TheKadeshi:
             # Флаг, нужно ли продолжать сканирование
             need_to_scan: bool = True
 
-            # heuristic_result: h_mod.IHeuristicCheckResult = h_mod.IHeuristicCheckResult()
-
-            with open(file_item['path'], mode='rb') as f:
-
-                # Тут у нас обработчик ошибок.
-                try:
-                    content = f.read()
-                    f.close()
-                # Это если в коде внезапно нашелся недопустимый символ.
-                except UnicodeDecodeError as e:
-                    is_file_error = True
-                    print("Incorrect char in ", file_item['path'], e)
+            content = file_system.get_file_content(file_item['path'])
 
             # Если нет ошибок чтения, то сканируем
-            if len(content) > 0:
+            content_length: int = len(content)
+            if content_length == 0:
+                break
 
-                # No need to check if database is absent
-                if self.database_present:
-                    # Хеш сумма файла
-                    file_hash: str = hashlib.sha256(content).hexdigest()
+            # Хеш сумма файла
+            file_hash: str = hashlib.sha256(content).hexdigest()
 
-                    local_signatures = self.signatures_database['h']
-                    for signature in local_signatures:
+            # local_signatures = self.signatures_database['h']
+            for signature in local_hash_signatures:
 
-                        if file_hash == signature['expression']:
+                if file_hash == signature['expression']:
 
-                            is_file_clean = False
+                    is_file_clean = False
 
-                            anamnesis_element = {
-                                'id': signature['id'],
-                                'type': 'h',
-                                'path': file_item['path'],
-                                'title': signature['title'],
-                                'action': signature['action']
-                            }
+                    anamnesis_element = {
+                        'id': signature['id'],
+                        'type': 'h',
+                        'path': file_item['path'],
+                        'title': signature['title'],
+                        'action': signature['action']
+                    }
 
-                            if signature['action'] == 'delete':
-                                need_to_scan = False
+                    if signature['action'] == 'delete':
+                        need_to_scan = False
 
-                            # Прерываем цикл
-                            break
+                    # Прерываем цикл
+                    break
 
-            if need_to_scan and self.database_present:
+            if need_to_scan:
 
                 # Если сканирование по хэш ничего не выявило, то ищем по сигнатурам
                 try:
@@ -163,20 +151,9 @@ class TheKadeshi:
                 except UnicodeDecodeError:
                     string_content = content.decode('latin-1')
 
-                local_signatures = self.signatures_database['r']
-                for signature in local_signatures:
-                    is_signature_correct = True
-                    if signature['min_size'] is not None:
-                        if file_item['size'] < signature['min_size']:
-                            is_signature_correct = False
+                for signature in local_regex_signatures:
 
-                    if signature['max_size'] is not None:
-                        if file_item['size'] > signature['max_size']:
-                            is_signature_correct = False
-
-                    if signature['min_size'] is not None and signature['max_size'] is not None:
-                        if signature['min_size'] > file_item['size'] > signature['max_size']:
-                            is_signature_correct = False
+                    is_signature_correct = self.check_signature_correctness(signature, file_item['size'])
 
                     if is_signature_correct:
                         signature_time_start = time.time()
@@ -189,7 +166,8 @@ class TheKadeshi:
                             if not signature['id'] in signatures_statistic:
                                 signatures_statistic[signature['id']] = 0
                             old_value = signatures_statistic[signature['id']]
-                            signatures_statistic[signature['id']] = old_value + signatures_time_delta
+                            signatures_statistic[signature['id']] = old_value + \
+                                                                    signatures_time_delta
 
                         if matches is not None:
                             is_file_clean = False
@@ -222,13 +200,14 @@ class TheKadeshi:
             if is_file_error:
                 file_message = "Error"
             else:
-                if self.database_present:
-                    if not is_file_clean:
-                        file_message = cls.C_RED + "Infected" + cls.C_DEFAULT + ": " + cls.C_L_YELLOW + \
-                                       anamnesis_element['title'] + cls.C_DEFAULT
+                if not is_file_clean:
+                    file_message = cls.C_RED + "Infected" + \
+                                   cls.C_DEFAULT + ": " + \
+                                   cls.C_L_YELLOW + anamnesis_element['title'] + \
+                                   cls.C_DEFAULT
 
-                        if self.no_color:
-                            file_message = "Infected: " + anamnesis_element['title']
+                    if self.no_color:
+                        file_message = "Infected: " + anamnesis_element['title']
 
             short_file_path: str = file_item['path'][len(self.site_folder)::]
             print('[{0:.2f}% | {1:.1f}kB/s] {2!s} ({3!s})'.format(current_progress,
@@ -240,13 +219,42 @@ class TheKadeshi:
                                                                   flush=True))
 
             # print(len(anamnesis_element))
-            if len(anamnesis_element) > 0:
+            anamnesis_length = len(anamnesis_element)
+            if anamnesis_length > 0:
                 self.anamnesis_list.append(anamnesis_element)
 
         if self.debug_mode:
-            a1_sorted_keys = sorted(signatures_statistic, key=signatures_statistic.get, reverse=False)
+            a1_sorted_keys = sorted(signatures_statistic,
+                                    key=signatures_statistic.get,
+                                    reverse=False)
             for r in a1_sorted_keys:
                 print(r, signatures_statistic[r])
+
+    @staticmethod
+    def check_signature_correctness(signature, file_size: int):
+        """
+        Check signature size correctness
+
+        :param signature: Signature element
+        :param file_size: File size in bytes
+        :return:
+        :rtype bool
+        """
+        is_signature_correct = True
+
+        if signature['min_size'] is not None:
+            if file_size < signature['min_size']:
+                is_signature_correct = False
+
+        if signature['max_size'] is not None:
+            if file_size > signature['max_size']:
+                is_signature_correct = False
+
+        if signature['min_size'] is not None and signature['max_size'] is not None:
+            if signature['min_size'] > file_size > signature['max_size']:
+                is_signature_correct = False
+
+        return is_signature_correct
 
     def cure(self):
         """
@@ -256,7 +264,7 @@ class TheKadeshi:
         """
 
         rpt = report.Report()
-        fs = fsys.FileSystem()
+        fs = f_system.FileSystem()
 
         for element in self.anamnesis_list:
             cure_result = {
@@ -272,20 +280,19 @@ class TheKadeshi:
             }
 
             # Удаление зараженного файла
-            if element['action'] == 'delete':
-                try:
-                    if not self.no_cure:
+            if self.no_cure:
+                cure_result['result'] = 'disabled'
+            else:
+                if element['action'] == 'delete':
+                    try:
                         os.remove(element['path'])
                         cure_result['result'] = 'ok'
-                    else:
-                        cure_result['result'] = 'disabled'
-                except PermissionError as e:
-                    cure_result['result'] = 'false'
-                    cure_result['result_message'] = e
+                    except PermissionError as e:
+                        cure_result['result'] = 'false'
+                        cure_result['result_message'] = e
 
-            # Лечение зараженного файла
-            if element['action'] == 'cure':
-                if not self.no_cure:
+                # Лечение зараженного файла
+                elif element['action'] == 'cure':
                     file_content = fs.get_file_content(element['path'])
                     cure_result['result'] = 'cure'
 
@@ -309,18 +316,13 @@ class TheKadeshi:
                     cure_result['result'] = 'false'
                     if result:
                         cure_result['result'] = 'ok'
-                else:
-                    cure_result['result'] = 'disabled'
 
-            if element['action'] == 'quarantine':
-                if not self.no_cure:
+                else:  # element['action'] == 'quarantine':
                     try:
                         os.rename(element['path'], element['path'] + '.suspected')
                     except PermissionError as e:
                         cure_result['result'] = 'false'
                         cure_result['result_message'] = e
-                else:
-                    cure_result['result'] = 'disabled'
 
             rpt.append(cure_result)
 

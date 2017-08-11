@@ -1,54 +1,64 @@
 #!/usr/bin/env python
+"""
+Main module
+"""
 import argparse
-import modules.thekadeshi as the_kadeshi
+import modules.thekadeshi as kadeshi
 from _version import __version__
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='There is the options.')
-    parser.register("type", "bool", lambda v: v.lower() == "true")
-    parser.add_argument(
+    PARSER = argparse.ArgumentParser(description='There is the options.')
+    PARSER.register("type", "bool", lambda v: v.lower() == "true")
+
+    PARSER.add_argument(
         "site",
         default="./",
         nargs="?",
         help="Site folder"
     )
-    parser.add_argument(
+
+    PARSER.add_argument(
         "-nc", "--no-color",
         action='store_true',
         help="Disables color output. Enabled by default"
     )
-    parser.add_argument(
+
+    PARSER.add_argument(
         "-dc", "--no-cure",
         action="store_true",
         help="Disables malware cleanup. Enabled by default"
     )
-    parser.add_argument(
+
+    PARSER.add_argument(
         "-nr", "--no-report",
         action="store_true",
         help="Disables report file. Enabled by default"
     )
-    parser.add_argument(
+
+    PARSER.add_argument(
         "-d", "--debug",
         action="count",
         default=0,
         help="Enables debug mode. Disabled by default"
     )
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
 
-    args = parser.parse_args()
+    PARSER.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
 
-    kdsh = the_kadeshi.TheKadeshi(args)
+    ARGS = PARSER.parse_args()
+
+    KDSH = kadeshi.TheKadeshi(ARGS)
 
     print("theKadeshi version", __version__)
 
-    kdsh.get_files_list()
+    KDSH.get_files_list()
 
-    print('Found', len(kdsh.files_list), 'files, ~', kdsh.total_files_size, 'bytes')
+    print('Found', len(KDSH.files_list), 'files, ~', KDSH.total_files_size, 'bytes')
 
-    kdsh.load_signatures()
+    KDSH.load_signatures()
 
-    print('Loaded', (int(len(kdsh.signatures_database['r'])) + int(len(kdsh.signatures_database['h']))), 'signatures')
+    print('Loaded', (int(len(KDSH.signatures_database['r'])) +
+                     int(len(KDSH.signatures_database['h']))), 'signatures')
 
-    kdsh.scan_files()
+    KDSH.scan_files()
 
-    kdsh.cure()
+    KDSH.cure()
