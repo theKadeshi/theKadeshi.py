@@ -8,19 +8,19 @@ class Database:
     """
     Database class
     """
-    
+
     base_path: str = ""
-    
+
     conn = None
-    
+
     # Флаг работы без базы
     no_database: bool = False
-    
+
     def __init__(self):
         """
         Constructor
         """
-        
+
         prefix_folders = ["./", "./database/", "../"]
         database_present: bool = False
         for prefix_folder in prefix_folders:
@@ -29,7 +29,7 @@ class Database:
                 database_present = True
                 self.base_path = current_base_path
                 break
-        
+
         if not database_present:
             print("Error 101. Database not found.")
             self.no_database = True
@@ -38,27 +38,27 @@ class Database:
         except sqlite3.OperationalError as e:
             print("Error 102. Database error", e)
             self.no_database = True
-        
+
         if self.no_database:
             print("Heuristic check only")
-    
+
     def get_hash_signatures(self):
         """
         Функция получения hash сигнатур из базы
-        
+
         :return: Список сигнатур
         :rtype: list
         """
-        
+
         signatures: list = []
-        
+
         if not self.no_database:
-            
+
             cursor = self.conn.cursor()
             cursor.execute(
                 "SELECT title, hash, action, type, id FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
             results = cursor.fetchall()
-            
+
             for result in results:
                 signatures.append({
                     'id': result[4],
@@ -66,28 +66,28 @@ class Database:
                     'expression': result[1],
                     'action': result[2]
                 })
-        
+
         return signatures
-    
+
     def get_regexp_signatures(self):
         """
         Функция получения списка регулярных сигнатур из базы
-        
+
         :return: Список сигнатур
         :rtype: list
         """
-        
+
         signatures: list = []
-        
+
         if not self.no_database:
-            
+
             cursor = self.conn.cursor()
             cursor.execute("""
                 SELECT title, expression, flags, action, type, id, min_size, max_size
                 FROM signatures_regexp
                 WHERE status = 1 ORDER BY popularity DESC, action DESC""")
             results = cursor.fetchall()
-            
+
             for result in results:
                 flag = re.IGNORECASE
                 if result[2] == 'ims':
@@ -107,15 +107,15 @@ class Database:
                     'flag': result[2],
                     'action': result[3]
                 })
-        
+
         return signatures
-    
+
     def __exit__(self, exception_type, exception_value, traceback):
         """
         Destructor
-        
+
         :return:
         """
-        
+
         if not self.no_database:
             self.conn.close()

@@ -34,21 +34,21 @@ if __name__ == "__main__":
         help="Enables debug mode. Disabled by default"
     )
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
-    
+
     args = parser.parse_args()
-    
+
     kdsh = the_kadeshi.TheKadeshi(args)
 
     print("theKadeshi version", __version__)
-    
+
     kdsh.get_files_list()
-    
+
     print('Found', len(kdsh.files_list), 'files, ~', kdsh.total_files_size, 'bytes')
-    
+
     kdsh.load_signatures()
-    
+
     print('Loaded', (int(len(kdsh.signatures_database['r'])) + int(len(kdsh.signatures_database['h']))), 'signatures')
-    
+
     kdsh.scan_files()
-    
+
     kdsh.cure()
