@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import re
+import datetime
 from definitions import ROOT_DIR
 
 
@@ -55,8 +56,12 @@ class Database:
         if not self.no_database:
 
             cursor = self.conn.cursor()
-            cursor.execute(
-                "SELECT title, hash, action, type, id FROM signatures_hash WHERE status = 1 ORDER BY popularity DESC")
+
+            cursor.execute("""SELECT title, hash, action, type, id 
+                              FROM signatures_hash 
+                              WHERE status = 1 
+                              ORDER BY popularity DESC""")
+
             results = cursor.fetchall()
 
             for result in results:
@@ -82,10 +87,12 @@ class Database:
         if not self.no_database:
 
             cursor = self.conn.cursor()
+
             cursor.execute("""
                 SELECT title, expression, flags, action, type, id, min_size, max_size
                 FROM signatures_regexp
                 WHERE status = 1 ORDER BY popularity DESC, action DESC""")
+
             results = cursor.fetchall()
 
             for result in results:
@@ -109,6 +116,84 @@ class Database:
                 })
 
         return signatures
+
+    def write_statistic(self, signature):
+        """
+        Write signature statistic usage
+        :param signature:
+        :return:
+        """
+        current_date = int(datetime.datetime.now().timestamp() * 100)
+        cursor = self.conn.cursor()
+
+        check_query = "SELECT id, signature_id, " + \
+                      "max_file_size, min_file_size, " + \
+                      "min_signature_size, max_signature_size, scanned_times " + \
+                      "FROM signatures_statistics " + \
+                      "WHERE signature_id = " + str(signature['id']) + " " + \
+                      "LIMIT 0, 1"
+
+        cursor.execute(check_query)
+
+        results = cursor.fetchone()
+
+        print(results)
+
+        if 'size' not in signature or signature['size'] is None:
+            signature['size'] = 0
+
+        if 'length' not in signature or signature['length'] is None:
+            signature['length'] = 0
+
+        if results is None:
+            query = "INSERT INTO signatures_statistics(" + \
+                    "signature_id, " + \
+                    "min_file_size, max_file_size, " + \
+                    "min_signature_size, max_signature_size, " + \
+                    "scanned_times, created_at) " + \
+                    "VALUES (" + \
+                    "" + str(signature['id']) + ", " + \
+                    str(signature['size']) + ", " + str(signature['size']) + ", " + \
+                    str(signature['length']) + ", " + str(signature['length']) + ", " + \
+                    "1, '" + str(current_date) + "')"
+
+            cursor.execute(query)
+            self.conn.commit()
+        else:
+            if signature['size'] < results[2]:
+                new_min_file_size: int = signature['size']
+            else:
+                new_min_file_size = results[2]
+
+            if signature['size'] > results[3]:
+                new_max_file_size: int = signature['size']
+            else:
+                new_max_file_size = results[3]
+
+            if signature['length'] < results[4]:
+                new_min_signature_size: int = signature['length']
+            else:
+                new_min_signature_size = results[4]
+
+            if signature['length'] > results[5]:
+                new_max_signature_size: int = signature['length']
+            else:
+                new_max_signature_size = results[5]
+
+            new_scanned_times: int = int(results[6]) + 1
+
+            query = "UPDATE signatures_statistics set " + \
+                    "min_file_size=" + str(new_min_file_size) + ", " + \
+                    "min_file_size=" + str(new_min_file_size) + ", " + \
+                    "max_file_size=" + str(new_max_file_size) + ", " + \
+                    "min_signature_size=" + str(new_min_signature_size) + ", " + \
+                    "max_signature_size=" + str(new_max_signature_size) + ", " + \
+                    "scanned_times=" + str(new_scanned_times) + ", " + \
+                    "updated_at='" + str(current_date) + "' " + \
+                    "where signature_id=" + str(signature['id'])
+
+            cursor.execute(query)
+            self.conn.commit()
 
     def __exit__(self, exception_type, exception_value, traceback):
         """
