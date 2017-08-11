@@ -268,6 +268,7 @@ class TheKadeshi:
 
         for element in self.anamnesis_list:
             cure_result = {
+                'signature_id': element['id'],
                 'path': element['path'],
                 'size': element['size'],
                 'action': element['action'],

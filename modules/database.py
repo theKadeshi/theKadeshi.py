@@ -127,14 +127,15 @@ class Database:
         current_date = int(datetime.datetime.now().timestamp() * 100)
         cursor = self.conn.cursor()
 
-        check_query = "SELECT id, signature_id, " + \
-                      "max_file_size, min_file_size, " + \
-                      "min_signature_size, max_signature_size, scanned_times " + \
-                      "FROM signatures_statistics " + \
-                      "WHERE signature_id = " + str(signature['id']) + " " + \
-                      "LIMIT 0, 1"
+        print(signature)
 
-        cursor.execute(check_query)
+        check_query = """
+        SELECT id, signature_id, max_file_size, min_file_size, min_signature_size, max_signature_size, scanned_times 
+        FROM signatures_statistics 
+        WHERE signature_id = ? 
+        LIMIT 0, 1"""
+
+        cursor.execute(check_query, (signature['signature_id'],))
 
         results = cursor.fetchone()
 
@@ -147,18 +148,19 @@ class Database:
             signature['length'] = 0
 
         if results is None:
-            query = "INSERT INTO signatures_statistics(" + \
-                    "signature_id, " + \
-                    "min_file_size, max_file_size, " + \
-                    "min_signature_size, max_signature_size, " + \
-                    "scanned_times, created_at) " + \
-                    "VALUES (" + \
-                    "" + str(signature['id']) + ", " + \
-                    str(signature['size']) + ", " + str(signature['size']) + ", " + \
-                    str(signature['length']) + ", " + str(signature['length']) + ", " + \
-                    "1, '" + str(current_date) + "')"
+            values = ([str(signature['id']), str(signature['size']), str(signature['size']),
+                       str(signature['length']), str(signature['length']),
+                       str(current_date)],)
 
-            cursor.execute(query)
+            query = """
+               INSERT INTO signatures_statistics(
+                    signature_id, 
+                    min_file_size, max_file_size, 
+                    min_signature_size, max_signature_size, 
+                    scanned_times, created_at) 
+               VALUES (?, ?, ?, ?, ?, 1, ?)"""
+
+            cursor.execute(query, values)
             self.conn.commit()
         else:
             if signature['size'] < results[2]:
@@ -172,12 +174,12 @@ class Database:
                 new_max_file_size = results[3]
 
             if signature['length'] < results[4]:
-                new_min_signature_size: int = signature['length']
+                new_min_signature_size: int = signature['cure']['length']
             else:
                 new_min_signature_size = results[4]
 
             if signature['length'] > results[5]:
-                new_max_signature_size: int = signature['length']
+                new_max_signature_size: int = signature['core']['length']
             else:
                 new_max_signature_size = results[5]
 
@@ -191,7 +193,7 @@ class Database:
                     "max_signature_size=" + str(new_max_signature_size) + ", " + \
                     "scanned_times=" + str(new_scanned_times) + ", " + \
                     "updated_at='" + str(current_date) + "' " + \
-                    "where signature_id=" + str(signature['id'])
+                    "where signature_id=" + str(signature['signature_id'])
 
             cursor.execute(query)
             self.conn.commit()
