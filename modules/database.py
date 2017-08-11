@@ -120,6 +120,7 @@ class Database:
     def write_statistic(self, signature):
         """
         Write signature statistic usage
+
         :param signature:
         :return:
         """
