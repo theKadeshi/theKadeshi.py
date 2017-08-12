@@ -133,6 +133,7 @@ class TheKadeshi:
                         'id': signature['id'],
                         'type': 'h',
                         'path': file_item['path'],
+                        'size': file_item['size'],
                         'title': signature['title'],
                         'action': signature['action']
                     }
@@ -326,6 +327,7 @@ class TheKadeshi:
                         cure_result['result_message'] = e
 
             rpt.append(cure_result)
+            dbase.Database.write_statistic(cure_result)
 
         rpt.total_files_size = self.total_files_size
         rpt.total_files_count = len(self.files_list)
