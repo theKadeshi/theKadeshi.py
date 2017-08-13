@@ -147,13 +147,13 @@ class Database:
         if 'size' not in signature or signature['size'] is None:
             signature['size'] = 0
 
-        if 'length' not in signature or signature['length'] is None:
+        if 'length' not in signature['cure'] or signature['cure']['length'] is None:
             signature['length'] = 0
 
         if results is None:
             values = ([str(signature['signature_id']), signature['type'],
                        str(signature['size']), str(signature['size']),
-                       str(signature['length']), str(signature['length']),
+                       str(signature['cure']['length']), str(signature['cure']['length']),
                        1, str(current_date)],)
 
             query = """
@@ -179,13 +179,13 @@ class Database:
             else:
                 new_max_file_size = results[3]
 
-            if signature['length'] < results[4]:
+            if signature['cure']['length'] < results[4]:
                 new_min_signature_size: int = signature['cure']['length']
             else:
                 new_min_signature_size = results[4]
 
-            if signature['length'] > results[5]:
-                new_max_signature_size: int = signature['core']['length']
+            if signature['cure']['length'] > results[5]:
+                new_max_signature_size: int = signature['cure']['length']
             else:
                 new_max_signature_size = results[5]
 
