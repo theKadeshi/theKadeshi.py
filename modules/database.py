@@ -124,22 +124,25 @@ class Database:
         :param signature:
         :return:
         """
+        # database = dbase.Database()
+        #
         current_date = int(datetime.datetime.now().timestamp() * 100)
         cursor = self.conn.cursor()
 
-        print(signature)
+        # print(signature)
 
         check_query = """
         SELECT id, signature_id, max_file_size, min_file_size, min_signature_size, max_signature_size, scanned_times 
         FROM signatures_statistics 
-        WHERE signature_id = ? 
+        WHERE signature_id = ? AND signature_type = ?
         LIMIT 0, 1"""
 
-        cursor.execute(check_query, (signature['signature_id'],))
+        cursor.execute(check_query, (signature['signature_id'], signature['type'],))
 
         results = cursor.fetchone()
+        # results = database.check_statustic(signature['signature_id'], signature['type'])
 
-        print(results)
+        # print(results)
 
         if 'size' not in signature or signature['size'] is None:
             signature['size'] = 0
@@ -148,20 +151,23 @@ class Database:
             signature['length'] = 0
 
         if results is None:
-            values = ([str(signature['id']), str(signature['size']), str(signature['size']),
+            values = ([str(signature['signature_id']), signature['type'],
+                       str(signature['size']), str(signature['size']),
                        str(signature['length']), str(signature['length']),
-                       str(current_date)],)
+                       1, str(current_date)],)
 
             query = """
                INSERT INTO signatures_statistics(
-                    signature_id, 
+                    signature_id, signature_type,
                     min_file_size, max_file_size, 
                     min_signature_size, max_signature_size, 
                     scanned_times, created_at) 
-               VALUES (?, ?, ?, ?, ?, 1, ?)"""
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
 
-            cursor.execute(query, values)
+            cursor.executemany(query, values)
             self.conn.commit()
+
+            # database.write_statistic(values)
         else:
             if signature['size'] < results[2]:
                 new_min_file_size: int = signature['size']
@@ -193,7 +199,8 @@ class Database:
                     "max_signature_size=" + str(new_max_signature_size) + ", " + \
                     "scanned_times=" + str(new_scanned_times) + ", " + \
                     "updated_at='" + str(current_date) + "' " + \
-                    "where signature_id=" + str(signature['signature_id'])
+                    "where signature_id=" + str(signature['signature_id']) + \
+                    " and signature_type='" + str(signature['type']) + "'"
 
             cursor.execute(query)
             self.conn.commit()

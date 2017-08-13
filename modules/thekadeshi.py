@@ -11,7 +11,6 @@ import modules.report as report
 import modules.colors as cls
 import modules.filesystem as f_system
 
-
 class TheKadeshi:
     """
     Основной класс
@@ -327,7 +326,8 @@ class TheKadeshi:
                         cure_result['result_message'] = e
 
             rpt.append(cure_result)
-            dbase.Database.write_statistic(cure_result)
+            self.write_statistic(cure_result)
+            # dbase.Database.write_statistic(cure_result)
 
         rpt.total_files_size = self.total_files_size
         rpt.total_files_count = len(self.files_list)
@@ -335,3 +335,8 @@ class TheKadeshi:
         if not self.no_report:
             rpt.write_file(self.site_folder)
         rpt.output()
+
+    def write_statistic(self, cure_result):
+        database = dbase.Database()
+
+        database.write_statistic(cure_result)
