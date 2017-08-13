@@ -11,6 +11,7 @@ import modules.report as report
 import modules.colors as cls
 import modules.filesystem as f_system
 
+
 class TheKadeshi:
     """
     Основной класс
@@ -171,8 +172,8 @@ class TheKadeshi:
 
                         if matches is not None:
                             is_file_clean = False
-                            start_position = matches.span()[0]
-                            end_position = matches.span()[1]
+                            start_position: int = matches.span()[0]
+                            end_position: int = matches.span()[1]
 
                             anamnesis_element = {
                                 'id': signature['id'],
@@ -181,7 +182,9 @@ class TheKadeshi:
                                 'size': file_item['size'],
                                 'title': signature['title'],
                                 'action': signature['action'],
-                                'cure': {'start': start_position, 'end': end_position}
+                                'cure': {'start': start_position,
+                                         'end': end_position,
+                                         'length': end_position - start_position}
                             }
                             # Прерываем цикл
                             break
@@ -242,17 +245,17 @@ class TheKadeshi:
         """
         is_signature_correct = True
 
-        if signature['min_size'] is not None:
-            if file_size < signature['min_size']:
-                is_signature_correct = False
-
-        if signature['max_size'] is not None:
-            if file_size > signature['max_size']:
-                is_signature_correct = False
-
         if signature['min_size'] is not None and signature['max_size'] is not None:
             if signature['min_size'] > file_size > signature['max_size']:
                 is_signature_correct = False
+        else:
+            if signature['min_size'] is not None:
+                if file_size < signature['min_size']:
+                    is_signature_correct = False
+
+            if signature['max_size'] is not None:
+                if file_size > signature['max_size']:
+                    is_signature_correct = False
 
         return is_signature_correct
 
@@ -267,6 +270,7 @@ class TheKadeshi:
         fs = f_system.FileSystem()
 
         for element in self.anamnesis_list:
+
             cure_result = {
                 'signature_id': element['id'],
                 'path': element['path'],
@@ -291,6 +295,9 @@ class TheKadeshi:
                     except PermissionError as e:
                         cure_result['result'] = 'false'
                         cure_result['result_message'] = e
+
+                    if 'cure'in element and 'length' in element['cure']:
+                        cure_result['cure']['length'] = element['cure']['length']
 
                 # Лечение зараженного файла
                 elif element['action'] == 'cure':

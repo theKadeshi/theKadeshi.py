@@ -172,27 +172,26 @@ class Database:
             if signature['size'] < results[2]:
                 new_min_file_size: int = signature['size']
             else:
-                new_min_file_size = results[2]
+                new_min_file_size: int = results[2]
 
             if signature['size'] > results[3]:
                 new_max_file_size: int = signature['size']
             else:
-                new_max_file_size = results[3]
+                new_max_file_size: int = results[3]
 
             if signature['cure']['length'] < results[4]:
                 new_min_signature_size: int = signature['cure']['length']
             else:
-                new_min_signature_size = results[4]
+                new_min_signature_size: int = results[4]
 
             if signature['cure']['length'] > results[5]:
                 new_max_signature_size: int = signature['cure']['length']
             else:
-                new_max_signature_size = results[5]
+                new_max_signature_size: int = results[5]
 
             new_scanned_times: int = int(results[6]) + 1
 
             query = "UPDATE signatures_statistics set " + \
-                    "min_file_size=" + str(new_min_file_size) + ", " + \
                     "min_file_size=" + str(new_min_file_size) + ", " + \
                     "max_file_size=" + str(new_max_file_size) + ", " + \
                     "min_signature_size=" + str(new_min_signature_size) + ", " + \
