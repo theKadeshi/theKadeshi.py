@@ -132,7 +132,7 @@ class Database:
         # print(signature)
 
         check_query = """
-        SELECT id, signature_id, max_file_size, min_file_size, min_signature_size, max_signature_size, scanned_times 
+        SELECT id, signature_id, min_file_size, max_file_size, min_signature_size, max_signature_size, scanned_times 
         FROM signatures_statistics 
         WHERE signature_id = ? AND signature_type = ?
         LIMIT 0, 1"""
