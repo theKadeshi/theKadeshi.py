@@ -42,6 +42,13 @@ if __name__ == "__main__":
         help="Enables debug mode. Disabled by default"
     )
 
+    # PARSER.add_argument(
+    #     "-e", "--export",
+    #     action="count",
+    #     default=0,
+    #     help="Exports signature into JSON format"
+    # )
+
     PARSER.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
 
     ARGS = PARSER.parse_args()
