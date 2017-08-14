@@ -80,6 +80,32 @@ class TheKadeshi:
         :return: Ничего
         """
 
+        def check_signature_correctness(file_size: int):
+            """
+            Check signature size correctness
+
+            :type signature: object
+            :param signature: Signature element
+            :param file_size: File size in bytes
+            :return:
+            :rtype bool
+            """
+            signature_correctness_flag: bool = True
+
+            if signature['min_size'] is not None and signature['max_size'] is not None:
+                if signature['min_size'] > file_size > signature['max_size']:
+                    signature_correctness_flag = False
+            else:
+                if signature['min_size'] is not None:
+                    if file_size < signature['min_size']:
+                        signature_correctness_flag = False
+
+                if signature['max_size'] is not None:
+                    if file_size > signature['max_size']:
+                        signature_correctness_flag = False
+
+            return signature_correctness_flag
+
         # Таймер
         timer_start: float = time.time()
 
@@ -154,7 +180,7 @@ class TheKadeshi:
 
                 for signature in local_regex_signatures:
 
-                    is_signature_correct = self.check_signature_correctness(signature, file_item['size'])
+                    is_signature_correct = check_signature_correctness(file_item['size'])
 
                     if is_signature_correct:
                         signature_time_start = time.time()
@@ -230,34 +256,8 @@ class TheKadeshi:
             a1_sorted_keys = sorted(signatures_statistic,
                                     key=signatures_statistic.get,
                                     reverse=False)
-            for r in a1_sorted_keys:
-                print(r, signatures_statistic[r])
-
-    @staticmethod
-    def check_signature_correctness(signature, file_size: int):
-        """
-        Check signature size correctness
-
-        :param signature: Signature element
-        :param file_size: File size in bytes
-        :return:
-        :rtype bool
-        """
-        is_signature_correct = True
-
-        if signature['min_size'] is not None and signature['max_size'] is not None:
-            if signature['min_size'] > file_size > signature['max_size']:
-                is_signature_correct = False
-        else:
-            if signature['min_size'] is not None:
-                if file_size < signature['min_size']:
-                    is_signature_correct = False
-
-            if signature['max_size'] is not None:
-                if file_size > signature['max_size']:
-                    is_signature_correct = False
-
-        return is_signature_correct
+            for array_element in a1_sorted_keys:
+                print(array_element, signatures_statistic[array_element])
 
     def cure(self):
         """
