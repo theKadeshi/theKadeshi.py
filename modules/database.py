@@ -117,6 +117,39 @@ class Database:
 
         return signatures
 
+    def get_raw_regexp_signatures(self):
+        """
+        Get raw database signatures
+
+        :return: Список сигнатур
+        :rtype: list
+        """
+
+        signatures: list = []
+
+        if not self.no_database:
+
+            cursor = self.conn.cursor()
+
+            cursor.execute("""
+                SELECT title, expression, flags, action, type, id, min_size, max_size
+                FROM signatures_regexp
+                WHERE status = 1 ORDER BY popularity DESC, action DESC""")
+
+            results = cursor.fetchall()
+
+            for result in results:
+                signatures.append({
+                    'id': result[5],
+                    'title': "KDSH." + result[4].upper() + "." + result[0],
+                    'expression': '~' + result[1] + '~' + result[2],
+                    'min_size': result[6],
+                    'max_size': result[7],
+                    'action': result[3]
+                })
+
+        return signatures
+
     def write_statistic(self, signature):
         """
         Write signature statistic usage

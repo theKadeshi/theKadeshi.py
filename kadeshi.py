@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
     if ARGS.export > 0:
         print('Export mode')
-        print(ARGS)
+        KDSH.export()
         exit()
 
     KDSH.get_files_list()

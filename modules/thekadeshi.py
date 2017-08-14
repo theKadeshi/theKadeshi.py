@@ -6,6 +6,7 @@ import os
 import hashlib
 import time
 import re
+import json
 import modules.database as dbase
 import modules.report as report
 import modules.colors as cls
@@ -296,7 +297,7 @@ class TheKadeshi:
                         cure_result['result'] = 'false'
                         cure_result['result_message'] = e
 
-                    if 'cure'in element and 'length' in element['cure']:
+                    if 'cure' in element and 'length' in element['cure']:
                         cure_result['cure']['length'] = element['cure']['length']
 
                 # Лечение зараженного файла
@@ -343,7 +344,29 @@ class TheKadeshi:
             rpt.write_file(self.site_folder)
         rpt.output()
 
-    def write_statistic(self, cure_result):
+    @staticmethod
+    def export():
+        """
+        Exports signatures
+        :return:
+        """
+        database = dbase.Database()
+        raw_signatures = {'r': database.get_raw_regexp_signatures(),
+                          'h': database.get_hash_signatures()}
+        json_data = json.dumps(raw_signatures)
+        file_system = f_system.FileSystem()
+
+        file_system.put_file_content('signatures.json', bytes(json_data, 'utf-8'))
+        print('Export complete')
+
+    @staticmethod
+    def write_statistic(cure_result):
+        """
+        Save statistics data
+
+        :param cure_result:
+        :return:
+        """
         database = dbase.Database()
 
         database.write_statistic(cure_result)
