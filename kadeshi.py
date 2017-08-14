@@ -42,12 +42,12 @@ if __name__ == "__main__":
         help="Enables debug mode. Disabled by default"
     )
 
-    # PARSER.add_argument(
-    #     "-e", "--export",
-    #     action="count",
-    #     default=0,
-    #     help="Exports signature into JSON format"
-    # )
+    PARSER.add_argument(
+        "-e", "--export",
+        action="count",
+        default=0,
+        help="Exports signature into JSON format"
+    )
 
     PARSER.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
 
@@ -57,14 +57,19 @@ if __name__ == "__main__":
 
     print("theKadeshi version", __version__)
 
-    KDSH.get_files_list()
-
-    print('Found', len(KDSH.files_list), 'files, ~', KDSH.total_files_size, 'bytes')
-
     KDSH.load_signatures()
 
     print('Loaded', (int(len(KDSH.signatures_database['r'])) +
                      int(len(KDSH.signatures_database['h']))), 'signatures')
+
+    if ARGS.export > 0:
+        print('Export mode')
+        print(ARGS)
+        exit()
+
+    KDSH.get_files_list()
+
+    print('Found', len(KDSH.files_list), 'files, ~', KDSH.total_files_size, 'bytes')
 
     KDSH.scan_files()
 
