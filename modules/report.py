@@ -51,7 +51,6 @@ class Report:
 
         :param report_path:
         :todo: fixme
-        :param element:
         :return:
         """
         report_filename: str = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
@@ -77,7 +76,6 @@ class Report:
         Temporary function
 
         :todo: fixme
-        :param element:
         :return:
         """
 
