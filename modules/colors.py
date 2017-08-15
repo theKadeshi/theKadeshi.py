@@ -1,3 +1,6 @@
+"""
+Simple console color commands
+"""
 C_DEFAULT = "\x1b[39m"
 C_RED = "\x1b[31m"
 C_GREEN = "\x1b[32m"

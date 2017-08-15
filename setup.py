@@ -1,19 +1,20 @@
+"""
+cx_Freeze setup
+"""
+import re
 from cx_Freeze import setup, Executable
 
-import re
-
-version_file = "_version.py"
-verstrline = open(version_file, "rt").read()
-VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-mo = re.search(VSRE, verstrline, re.M)
-if mo:
-    version_string: str = mo.group(1)
+VERSION_FILE: str = "_version.py"
+VERSION_STRING = open(VERSION_FILE, "rt").read()
+VERSION_REGEX = r"^__version__ = ['\"]([^'\"]*)['\"]"
+VERSION_MATCHES = re.search(VERSION_REGEX, VERSION_STRING, re.M)
+if VERSION_MATCHES:
+    version_string: str = VERSION_MATCHES.group(1)
 else:
-    raise RuntimeError("Unable to find version string in %s." % (version_file,))
+    raise RuntimeError("Unable to find version string in %s." % (VERSION_FILE,))
 
-buildOptions = dict(packages=[],
-                    include_files=['./database/thekadeshi.db', 'files/report.html']
-                    )
+BUILD_OPTIONS = dict(packages=[],
+                     include_files=['./database/thekadeshi.db', 'files/report.html'], )
 
 setup(
     name='theKadeshi',
@@ -23,6 +24,6 @@ setup(
     author='theKadeshi',
     author_email='info@thekadeshi.com',
     description='Antivirus for your site',
-    options=dict(build_exe=buildOptions),
+    options=dict(build_exe=BUILD_OPTIONS),
     executables=[Executable(script="kadeshi.py", icon="icon.ico")]
 )

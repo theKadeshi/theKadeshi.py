@@ -11,8 +11,17 @@
 	<link rel="manifest" href="https://thekadeshi.com/icons/manifest.json">
 	<link rel="mask-icon" href="https://thekadeshi.com/icons/safari-pinned-tab.svg" color="#5bbad5">
 	<meta name="theme-color" content="#ffffff">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+			integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+			  integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+			  crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+			  integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+			  crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+			  integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+			  crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -42,12 +51,12 @@
 			background-repeat: no-repeat;
 			background-size: contain;
 			position: fixed;
-			opacity: 0.07;
-			height: 100vh;
+			opacity: 0.01;
+			height: 90vh;
 			width: 100%;
 			margin: 0 auto;
 			overflow: hidden;
-			top: 60px;
+			top: 50px;
 			left: 0;
 		}
 
@@ -100,50 +109,88 @@
 			text-decoration: none;
 			color: #fff;
 		}
+
+		[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+			display: none !important;
+		}
 	</style>
 </head>
 <body ng-controller="ReportListController">
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
 	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-					  aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#" title="theKadeshi report">theKadeshi</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<li><a href="#report">Report</a></li>
-				<li><a href="https://thekadeshi.com/en/" target="_blank" title="theKadeshi website">Website</a></li>
-				<li><a href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank"
-						 title="Download latest version">Download</a></li>
-				<li><a href="https://thekadeshi.com/en/contacts/" target="_blank" title="Contacts">Contact</a></li>
+		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+				  data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+				  aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand" href="#" title="theKadeshi report">
+			<img src="https://thekadeshi.com/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+			theKadeshi</a>
+		<div id="navbar" class="collapse navbar-collapse">
+
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item"><a class="nav-link" href="#report">Report</a></li>
+				<li class="nav-item"><a class="nav-link" href="https://thekadeshi.com/en/" target="_blank"
+												title="theKadeshi website">Website</a></li>
+				<li class="nav-item"><a class="nav-link" href="https://github.com/theKadeshi/theKadeshi.py/releases"
+												target="_blank"
+												title="Download latest version">Download</a></li>
+				<li class="nav-item"><a class="nav-link" href="https://thekadeshi.com/en/contacts/" target="_blank"
+												title="Contacts">Contact</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->
 	</div>
 </nav>
 <div id="main" class="container">
 	<div class="row">
-		<div class="col-xs-12">
-			<h1>theKadeshi scan report <small>{Application_Version}</small></h1>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h1>theKadeshi
+				<small>scan report</small>
+			</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="hidden-sm-down col-md-6 col-lg-6">
 			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
 				Delete it after your job done.</p>
 		</div>
+		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+			<table class="table table-sm">
+				<tbody>
+				<tr>
+					<th>Version</th>
+					<td>{Application_Version}</td>
+				</tr>
+				<tr ng-cloak>
+					<th>Date</th>
+					<td>{{scanDate}}</td>
+				</tr>
+				<tr ng-cloak>
+					<th>Total files scanned</th>
+					<td>{{totalFilesCount}}</td>
+				</tr>
+				<tr ng-cloak>
+					<th>Total files size</th>
+					<td title="{{totalFilesSize}} bytes">{{humanLikeFileSize}} {{humanLikeFileSizeCaption}}</td>
+				</tr>
+				<tr ng-cloak ng-class="{'table-success':scanResult.length == 0, 'table-warning':scanResult.length > 0}">
+					<th>Malwares found</th>
+					<td>0</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
-	<div class="row" id="report">
-		<div class="col-xs-12" ng-if="scanResult.length == 0">
+	<div class="row" id="report" ng-cloak>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="scanResult.length == 0">
 			<h4>Nothing is found</h4>
 			<p>Looks like your site is clean.</p>
 			<p>Please consider to repeat scan with a new version of the scanner. You can download it in our repository: <a
 				href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank" title="Download theKadeshi">theKadeshi</a>
 			</p>
 		</div>
-		<div class="col-xs-12" ng-if="scanResult.length > 0">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="scanResult.length > 0">
 			<table class="table table-hover">
 				<thead>
 				<tr>
@@ -157,7 +204,8 @@
 				<tr ng-repeat="file in scanResult">
 					<td>{{ $index }}</td>
 					<td>{{ file.path }}
-						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}<span class="signature-length" ng-if="file.cure.length != 0">, len {{file.cure.length}}
+						<small class="hidden-md hidden-sm hidden-xs">@ position {{file.cure.start}}<span
+							class="signature-length" ng-if="file.cure.length != 0">, len {{file.cure.length}}
 							symbols</span>
 						</small>
 						<br/>
@@ -175,7 +223,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
 				Delete it after your job done.</p>
 		</div>
@@ -184,15 +232,15 @@
 <footer class="container-fluid">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-2 col-md-2 col-sm-2 hidden-xs">
+			<div class="col-lg-2 col-md-2 col-sm-2 hidden-xs-down">
 				<div class="bottom-logo" title="theKadeshi"></div>
 			</div>
 			<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
 				<div class="row">
-					<div class="col-xs-12 follow-caption">Follow us</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 follow-caption">Follow us</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12 footer-icons">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 footer-icons">
 						<a href="https://www.facebook.com/Kadeshi/" name="Facebook" title="theKadeshi in Facebook"
 							target="_blank">
 							<i class="fa fa-facebook-official" aria-hidden="true"></i>
@@ -219,8 +267,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-12">
+		<div class="row" ng-cloak>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				&copy; 2016 - {{currentYear}} theKadeshi. All rights reserved.
 			</div>
 		</div>
@@ -230,11 +278,43 @@
 	kadeshiReportApp = angular.module('kadeshiReportApp', []);
 	// noinspection JSAnnotator
 	var scanResult = {Result_Json};
+	// noinspection JSAnnotator
+	var totalFilesSize = {Result_Total_Files_Size};
+	// noinspection JSAnnotator
+	var totalFilesCount = {Result_Total_Files_Count};
+	// noinspection JSAnnotator
+	var scanDate = '{Result_Scan_Date}';
 	kadeshiReportApp.controller('ReportListController', function ReportListController($scope) {
 		var date = new Date();
 		$scope.scanResult = scanResult;
 		$scope.theKadeshiUrl = 'https://thekadeshi.com';
 		$scope.currentYear = date.getFullYear();
+		$scope.totalFilesSize = totalFilesSize;
+		$scope.totalFilesCount = totalFilesCount;
+		$scope.humanLikeFileSize = 0;
+		$scope.humanLikeFileSizeCaption = 'b';
+		$scope.scanDate = scanDate;
+
+		$scope.init = function () {
+			var newSize = $scope.totalFilesSize;
+			var newCaption = 'b';
+			if (newSize > 1024) {
+				newSize = newSize / 1024;
+				newCaption = 'kb';
+			}
+			if (newSize > 1024) {
+				newSize = newSize / 1024;
+				newCaption = 'mb';
+			}
+			if (newSize > 1024) {
+				newSize = newSize / 1024;
+				newCaption = 'gb';
+			}
+			$scope.humanLikeFileSize = newSize.toFixed(2);
+			$scope.humanLikeFileSizeCaption = newCaption;
+		};
+
+		$scope.init();
 
 		$scope.decoder = function (value) {
 			var scriptValue = window.atob(value);

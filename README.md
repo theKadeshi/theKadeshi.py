@@ -1,8 +1,6 @@
 # theKadeshi #
 ### Antivirus for your web-site ###
-[![Code Issues](https://www.quantifiedcode.com/api/v1/project/40bbe4ed3bdf46af9107edcea02e9d22/badge.svg)](https://www.quantifiedcode.com/app/project/40bbe4ed3bdf46af9107edcea02e9d22)
-
-[TOC]
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd626f73d9c746bc960b1b085c163473)](https://www.codacy.com/app/ntorgov/theKadeshi.py?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ntorgov/theKadeshi.py&amp;utm_campaign=Badge_Grade) [ ![Codeship Status for theKadeshi/theKadeshi.py](https://app.codeship.com/projects/5c673fa0-61c0-0135-c1d2-2e05140300ec/status?branch=master)](https://app.codeship.com/projects/239693)
 
 #### Usage ####
 Download latest version from release section: [Releases](https://github.com/theKadeshi/theKadeshi.py/releases)
@@ -25,6 +23,7 @@ Options are:
 * `-bw` - Disables color output. Enabled by default. Try this option if you see something like this: `...php (?[32mClean?[39m)...`
 * `-nc` - Disables cleanup mode. Enabled by default
 * `-nr` - Disables report file. Enabled by default
+* `-d`  - Outputs some debug information
 
 #### Requirements ####
 * Python 3.6+

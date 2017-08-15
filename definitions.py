@@ -1,3 +1,6 @@
+"""
+Base script definitions
+"""
 import os
 
 # Project root folder
