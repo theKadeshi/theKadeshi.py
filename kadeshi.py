@@ -2,11 +2,16 @@
 """
 Main module
 """
+import locale
 import argparse
 import modules.thekadeshi as kadeshi
 from _version import __version__
 
 if __name__ == "__main__":
+    locale.setlocale(locale.LC_ALL, '')
+
+    CURRENT_LOCALE = locale.getlocale(locale.LC_CTYPE)[0]
+
     PARSER = argparse.ArgumentParser(description='There is the options.')
     PARSER.register("type", "bool", lambda v: v.lower() == "true")
 
