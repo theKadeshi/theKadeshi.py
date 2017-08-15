@@ -1,0 +1,38 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-08-15 23:05+0300\n"
+"PO-Revision-Date: 2017-08-15 23:08+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.3\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
+
+#: modules/thekadeshi.py:231 modules/thekadeshi.py:233
+msgid "Clean"
+msgstr "Чистый"
+
+#: modules/thekadeshi.py:236
+msgid "Error"
+msgstr "Ошибка"
+
+#: modules/thekadeshi.py:239
+msgid "Infected"
+msgstr "Заражен"
+
+#: modules/thekadeshi.py:245
+msgid "Infected: %s"
+msgstr "Заражен: %s"
+
+#: modules/thekadeshi.py:365
+msgid "Export complete"
+msgstr "Экспорт завершен"

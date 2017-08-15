@@ -2,6 +2,7 @@
 Module theKadesi
 """
 import base64
+import gettext
 import os
 import hashlib
 import time
@@ -11,6 +12,10 @@ import modules.database as dbase
 import modules.report as report
 import modules.colors as cls
 import modules.filesystem as f_system
+
+gettext.bindtextdomain('thekadeshi', localedir='locale')
+gettext.textdomain('thekadeshi')
+_ = gettext.gettext
 
 
 class TheKadeshi:
@@ -80,6 +85,10 @@ class TheKadeshi:
 
         :return: Ничего
         """
+
+        gettext.bindtextdomain('thekadeshi', localedir='locale')
+        gettext.textdomain('thekadeshi')
+        _ = gettext.gettext
 
         def check_signature_correctness(file_size: int):
             """
@@ -223,21 +232,21 @@ class TheKadeshi:
                 scan_speed = total_scanned / time_delta / 1024
             scanner_counter = scanner_counter + 1
 
-            file_message: str = ''.join(cls.C_GREEN + "Clean" + cls.C_DEFAULT)
+            file_message: str = ''.join(cls.C_GREEN + _("Clean") + cls.C_DEFAULT)
             if self.no_color:
-                file_message = "Clean"
+                file_message = _("Clean")
 
             if is_file_error:
-                file_message = "Error"
+                file_message = _("Error")
             else:
                 if not is_file_clean:
-                    file_message = cls.C_RED + "Infected" + \
+                    file_message = cls.C_RED + _("Infected") + \
                                    cls.C_DEFAULT + ": " + \
                                    cls.C_L_YELLOW + anamnesis_element['title'] + \
                                    cls.C_DEFAULT
 
                     if self.no_color:
-                        file_message = "Infected: " + anamnesis_element['title']
+                        file_message = _("Infected: %s") % anamnesis_element['title']
 
             short_file_path: str = file_item['path'][len(self.site_folder)::]
             print('[{0:.2f}% | {1:.1f}kB/s] {2!s} ({3!s})'.format(current_progress,
@@ -357,7 +366,7 @@ class TheKadeshi:
         file_system = f_system.FileSystem()
 
         file_system.put_file_content('signatures.json', bytes(json_data, 'utf-8'))
-        print('Export complete')
+        print(_('Export complete'))
 
     @staticmethod
     def write_statistic(cure_result):

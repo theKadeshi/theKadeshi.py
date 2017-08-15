@@ -1,0 +1,66 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-08-15 22:51+0300\n"
+"PO-Revision-Date: 2017-08-15 22:59+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.3\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
+
+#: kadeshi.py:22
+msgid "There is the options"
+msgstr "Опции программы"
+
+#: kadeshi.py:29
+msgid "Site folder"
+msgstr "Папка сайта"
+
+#: kadeshi.py:35
+msgid "Disables color output. Enabled by default"
+msgstr "Отключает вывод цвета"
+
+#: kadeshi.py:41
+msgid "Disables malware cleanup. Enabled by default"
+msgstr "Отключает чистку вирусов. Включено по умолчанию"
+
+#: kadeshi.py:47
+msgid "Disables report file. Enabled by default"
+msgstr "Отключает создания файла отчетов. Включено по умолчанию"
+
+#: kadeshi.py:54
+msgid "Enables debug mode. Disabled by default"
+msgstr "Включает режим отладки. Отключено по умолчанию"
+
+#: kadeshi.py:61
+msgid "Exports signatures into JSON format"
+msgstr "Экспорт сигнатур в JSON"
+
+#: kadeshi.py:68
+msgid "Changes program's language"
+msgstr "Изменяет язык программы"
+
+#: kadeshi.py:78
+msgid "theKadeshi version %s"
+msgstr "theKadeshi версии %s"
+
+#: kadeshi.py:82
+msgid "Loaded %s signatures"
+msgstr "Загружено %s сигнатур"
+
+#: kadeshi.py:86
+msgid "Export mode"
+msgstr "Режим экспорта"
+
+#: kadeshi.py:92
+msgid "Found %s files, ~ %s bytes"
+msgstr "Найдено %s файлов, ~ %s байт"
