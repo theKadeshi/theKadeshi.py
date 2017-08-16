@@ -1,0 +1,106 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-08-16 08:35+0300\n"
+"PO-Revision-Date: 2017-08-16 08:41+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.3\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
+
+#: modules/report.py:67
+msgid "theKadeshi scan report"
+msgstr "theKadeshi отчет сканера"
+
+#: modules/report.py:68
+msgid "theKadeshi report"
+msgstr "theKadeshi отчет"
+
+#: modules/report.py:69
+msgid "Report"
+msgstr "Отчет"
+
+#: modules/report.py:70
+msgid "Website"
+msgstr "Сайт"
+
+#: modules/report.py:71
+msgid "Download"
+msgstr "Скачать"
+
+#: modules/report.py:72
+msgid "Contacts"
+msgstr "Контакты"
+
+#: modules/report.py:73
+msgid "Important!"
+msgstr "Важно!"
+
+#: modules/report.py:74
+msgid ""
+"Never keep this file at your hosting account. Delete it after your job done.!"
+msgstr ""
+"Никогда не оставляйте этот сайт на хостинге. Удалите его, когда закончите "
+"работу!"
+
+#: modules/report.py:75
+msgid "Version"
+msgstr "Версия"
+
+#: modules/report.py:76
+msgid "Date"
+msgstr "Дата"
+
+#: modules/report.py:77
+msgid "Total files scanned"
+msgstr "Проверено файлов"
+
+#: modules/report.py:78
+msgid "Total files size"
+msgstr "Размер файлов"
+
+#: modules/report.py:79
+msgid "bytes"
+msgstr "байт"
+
+#: modules/report.py:80
+msgid "Malwares found"
+msgstr "Заражений найдено"
+
+#: modules/report.py:82
+msgid "Nothing is found"
+msgstr "Ничего не найдено"
+
+#: modules/report.py:83
+msgid "Looks like your site is clean"
+msgstr "Похоже, ваш сайт чист"
+
+#: modules/report.py:84
+msgid ""
+"Please consider to repeat scan with a new version of the scanner. You can "
+"download it in our repository"
+msgstr ""
+"Попробуйте повторить проверку с новой версией сканера. Вы можете найти ее в "
+"нашем репозитории"
+
+#: modules/report.py:86
+msgid "File"
+msgstr "Файл"
+
+#: modules/report.py:87
+msgid "Infection"
+msgstr "Заражение"
+
+#: modules/report.py:88
+msgid "Action"
+msgstr "Действие"

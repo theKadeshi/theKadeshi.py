@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, maximum-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<title>theKadeshi scan report</title>
+	<title>{theKadeshi_scan_report}</title>
 	<link rel="shortcut icon" type="image/x-icon" href="https://thekadeshi.com/favicon.ico"/>
 	<link rel="apple-touch-icon" sizes="180x180" href="https://thekadeshi.com/icons/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="https://thekadeshi.com/icons/favicon-32x32.png">
@@ -124,20 +124,28 @@
 				  aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<a class="navbar-brand" href="#" title="theKadeshi report">
+		<a class="navbar-brand" href="#" title="{theKadeshi_report}">
 			<img src="https://thekadeshi.com/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="">
 			theKadeshi</a>
 		<div id="navbar" class="collapse navbar-collapse">
 
 			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-				<li class="nav-item"><a class="nav-link" href="#report">Report</a></li>
-				<li class="nav-item"><a class="nav-link" href="https://thekadeshi.com/en/" target="_blank"
-												title="theKadeshi website">Website</a></li>
-				<li class="nav-item"><a class="nav-link" href="https://github.com/theKadeshi/theKadeshi.py/releases"
+				<li class="nav-item">
+					<a class="nav-link" href="#report">{Report}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="https://thekadeshi.com/en/" target="_blank"
+												title="theKadeshi website">{Website}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="https://github.com/theKadeshi/theKadeshi.py/releases"
 												target="_blank"
-												title="Download latest version">Download</a></li>
-				<li class="nav-item"><a class="nav-link" href="https://thekadeshi.com/en/contacts/" target="_blank"
-												title="Contacts">Contact</a></li>
+												title="Download latest version">{Download}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="https://thekadeshi.com/en/contacts/" target="_blank"
+												title="Contacts">{Contacts}</a>
+				</li>
 			</ul>
 		</div><!--/.nav-collapse -->
 	</div>
@@ -152,30 +160,29 @@
 	</div>
 	<div class="row">
 		<div class="hidden-sm-down col-md-6 col-lg-6">
-			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
-				Delete it after your job done.</p>
+			<p class="lead"><span class="text-danger">{Important}</span> {Warning_text}</p>
 		</div>
 		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 			<table class="table table-sm">
 				<tbody>
 				<tr>
-					<th>Version</th>
+					<th>{Version}</th>
 					<td>{Application_Version}</td>
 				</tr>
 				<tr ng-cloak>
-					<th>Date</th>
+					<th>{Date}</th>
 					<td>{{scanDate}}</td>
 				</tr>
 				<tr ng-cloak>
-					<th>Total files scanned</th>
+					<th>{Total_files_scanned}</th>
 					<td>{{totalFilesCount}}</td>
 				</tr>
 				<tr ng-cloak>
-					<th>Total files size</th>
-					<td title="{{totalFilesSize}} bytes">{{humanLikeFileSize}} {{humanLikeFileSizeCaption}}</td>
+					<th>{Total_files_size}</th>
+					<td title="{{totalFilesSize}} {bytes}">{{humanLikeFileSize}} {{humanLikeFileSizeCaption}}</td>
 				</tr>
 				<tr ng-cloak ng-class="{'table-success':scanResult.length == 0, 'table-warning':scanResult.length > 0}">
-					<th>Malwares found</th>
+					<th>{Malwares_found}</th>
 					<td>0</td>
 				</tr>
 				</tbody>
@@ -184,10 +191,9 @@
 	</div>
 	<div class="row" id="report" ng-cloak>
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="scanResult.length == 0">
-			<h4>Nothing is found</h4>
-			<p>Looks like your site is clean.</p>
-			<p>Please consider to repeat scan with a new version of the scanner. You can download it in our repository: <a
-				href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank" title="Download theKadeshi">theKadeshi</a>
+			<h4>{Nothing_found}</h4>
+			<p>{Site_clean}</p>
+			<p>{Consider}: <a href="https://github.com/theKadeshi/theKadeshi.py/releases" target="_blank" title="Download theKadeshi">theKadeshi</a>
 			</p>
 		</div>
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-if="scanResult.length > 0">
@@ -195,9 +201,9 @@
 				<thead>
 				<tr>
 					<th>#</th>
-					<th>File</th>
-					<th>Infection</th>
-					<th>Action</th>
+					<th>{File}</th>
+					<th>{Infection}</th>
+					<th>{Action}</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -224,8 +230,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<p class="lead"><span class="text-danger">Important!</span> Never keep this file at your hosting account.
-				Delete it after your job done.</p>
+			<p class="lead"><span class="text-danger">{Important}</span> {Warning_text}</p>
 		</div>
 	</div>
 </div>

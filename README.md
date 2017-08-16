@@ -20,11 +20,12 @@ kadeshi.exe [options] c:\temp\sites\your_site_folder\
 Options are:
 
 * `-h`  - Help
-* `-v`  - Version
 * `-bw` - Disables color output. Enabled by default. Try this option if you see something like this: `...php (?[32mClean?[39m)...`
 * `-nc` - Disables cleanup mode. Enabled by default
 * `-nr` - Disables report file. Enabled by default
-* `-d`  - Outputs some debug information
+* `-d`  - Enables debug mode. Disabled by default
+* `-e`  - Exports signatures for [PHP agent](https://github.com/theKadeshi/theKadeshi.agent)
+* `--language` [ru, en]  - Switches output to other language. Does not works in compiled version
 
 #### Requirements ####
 * Python 3.6+

@@ -1,3 +1,4 @@
+import gettext
 import time
 import json
 import os
@@ -53,12 +54,47 @@ class Report:
         :todo: fixme
         :return:
         """
-        report_filename: str = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
+        gettext.bindtextdomain('report', localedir='locale')
+        gettext.textdomain('report')
+        _ = gettext.gettext
+
+        report_filename = "thekadeshi.report." + datetime.strftime(datetime.now(), "%Y.%m.%d.%H.%M") + ".html"
         report_file: str = os.path.join(report_path, report_filename)
 
         report_template = self.load_template()
 
-        rendered_template = report_template.replace(b'{Result_Json}', bytes(json.dumps(self.report_list), 'utf-8'))
+        # Replace languages
+        rendered_template = report_template.replace(b'{theKadeshi_scan_report}',
+                                                    bytes(_('theKadeshi scan report'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{theKadeshi_report}', bytes(_('theKadeshi report'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Report}', bytes(_('Report'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Website}', bytes(_('Website'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Download}', bytes(_('Download'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Contacts}', bytes(_('Contacts'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Important}', bytes(_('Important!'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Warning_text}', bytes(
+            _('Never keep this file at your hosting account. Delete it after your job done.!'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Version}', bytes(_('Version'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Date}', bytes(_('Date'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Total_files_scanned}',
+                                                      bytes(_('Total files scanned'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Total_files_size}', bytes(_('Total files size'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{bytes}', bytes(_('bytes'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Malwares_found}', bytes(_('Malwares found'), 'utf-8'))
+
+        rendered_template = rendered_template.replace(b'{Nothing_found}', bytes(_('Nothing is found'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Site_clean}',
+                                                      bytes(_('Looks like your site is clean'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Consider}', bytes(_(
+            'Please consider to repeat scan with a new version of the scanner. You can download it in our repository'),
+                                                                           'utf-8'))
+
+        rendered_template = rendered_template.replace(b'{File}', bytes(_('File'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Infection}', bytes(_('Infection'), 'utf-8'))
+        rendered_template = rendered_template.replace(b'{Action}', bytes(_('Action'), 'utf-8'))
+
+        # Replace data
+        rendered_template = rendered_template.replace(b'{Result_Json}', bytes(json.dumps(self.report_list), 'utf-8'))
         rendered_template = rendered_template.replace(b'{Application_Version}', bytes(__version__, 'utf-8'))
         rendered_template = rendered_template.replace(b'{Result_Total_Files_Size}',
                                                       bytes(str(self.total_files_size), 'utf-8'))
